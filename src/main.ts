@@ -11,7 +11,7 @@ import {
   ExpressAdapter,
   type NestExpressApplication,
 } from '@nestjs/platform-express';
-import cookieParser from 'cookie-parser';
+import * as cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap(): Promise<NestExpressApplication> {
