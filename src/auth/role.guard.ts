@@ -27,7 +27,10 @@ export class RoleGuard implements CanActivate {
     const isAllowed = roles.some((role) => user?.role === role);
 
     if (!isAllowed) {
-      throw new HttpException('Not Authorized', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        'You are not authorized for this action',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     return isAllowed;
