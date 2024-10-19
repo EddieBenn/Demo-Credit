@@ -24,6 +24,17 @@ export enum ADMIN_ROLES {
   ADMIN = 'admin',
 }
 
+export enum TypeEnum {
+  CREDIT = 'credit',
+  DEBIT = 'debit',
+}
+
+export enum StatusEnum {
+  PENDING = 'pending',
+  SUCCESSFUL = 'successful',
+  FAILED = 'failed',
+}
+
 export interface IPagination {
   totalRows: number;
   perPage: number;
