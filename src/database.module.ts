@@ -2,8 +2,11 @@ import { Global, Module } from '@nestjs/common';
 import Knex from 'knex';
 import { knexSnakeCaseMappers, Model } from 'objection';
 import { LocationCounter } from './location-counter/entities/location-counter.entity';
+import { Account } from './accounts/entities/account.entity';
+import { Transaction } from './transactions/entities/transaction.entity';
+import { User } from './users/entities/user.entity';
 
-const models = [LocationCounter];
+const models = [LocationCounter, Account, Transaction, User];
 
 const modelProviders = models.map((model) => ({
   provide: model.name,

@@ -5,6 +5,9 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { LocationCounterModule } from './location-counter/location-counter.module';
 import { DatabaseModule } from './database.module';
+import { AccountsModule } from './accounts/accounts.module';
+import { TransactionsModule } from './transactions/transactions.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -14,6 +17,9 @@ import { DatabaseModule } from './database.module';
     DatabaseModule,
     AuthModule,
     LocationCounterModule,
+    AccountsModule,
+    TransactionsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
