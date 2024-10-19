@@ -27,12 +27,13 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiSecurity,
+  ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { PaginationResponseDto } from './dto/paginate.dto';
 import { ADMIN_ROLES, IReqUser } from 'src/base.entity';
 import { Roles } from 'src/auth/role.decorator';
-
+@ApiTags('Transactions')
 @Controller('transactions')
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
