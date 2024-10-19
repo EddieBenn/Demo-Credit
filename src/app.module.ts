@@ -7,6 +7,7 @@ import { LocationCounterModule } from './location-counter/location-counter.modul
 import { DatabaseModule } from './database.module';
 import { AccountsModule } from './accounts/accounts.module';
 import { TransactionsModule } from './transactions/transactions.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { TransactionsModule } from './transactions/transactions.module';
     LocationCounterModule,
     AccountsModule,
     TransactionsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

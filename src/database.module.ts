@@ -4,8 +4,9 @@ import { knexSnakeCaseMappers, Model } from 'objection';
 import { LocationCounter } from './location-counter/entities/location-counter.entity';
 import { Account } from './accounts/entities/account.entity';
 import { Transaction } from './transactions/entities/transaction.entity';
+import { User } from './users/entities/user.entity';
 
-const models = [LocationCounter, Account, Transaction];
+const models = [LocationCounter, Account, Transaction, User];
 
 const modelProviders = models.map((model) => ({
   provide: model.name,
