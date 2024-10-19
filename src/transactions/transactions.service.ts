@@ -62,8 +62,8 @@ export class TransactionsService {
     return transaction;
   }
 
-  async getTransactionsBySenderId(
-    sender_account_id: string,
+  async getTransactionsByAccountId(
+    account_id: string,
     queryParams?: TransactionFilter,
   ): Promise<PaginationResponseDto> {
     const page = queryParams?.page ? Number(queryParams?.page) : 1;
@@ -71,50 +71,18 @@ export class TransactionsService {
 
     const result = await this.transactionModel
       .query()
-      .where('sender_account_id', sender_account_id)
+      .where('sender_account_id', account_id)
+      .orWhere('receiver_account_id', account_id)
       .orderBy('created_at', 'DESC')
       .page(page - 1, size);
 
     if (!result || result.total === 0) {
       throw new HttpException(
-        `no transactions found this user with account_id: ${sender_account_id}`,
+        `no transactions found this user with account_id: ${account_id}`,
         HttpStatus.NOT_FOUND,
       );
     }
 
-    const totalPages = Math.ceil(result.total / size);
-
-    return {
-      transactions: result.results,
-      pagination: {
-        totalRows: result.total,
-        perPage: size,
-        currentPage: page,
-        totalPages,
-        hasNextPage: page < totalPages,
-      },
-    };
-  }
-
-  async getTransactionsByReceiverId(
-    receiver_account_id: string,
-    queryParams?: TransactionFilter,
-  ): Promise<PaginationResponseDto> {
-    const page = queryParams?.page ? Number(queryParams?.page) : 1;
-    const size = queryParams?.size ? Number(queryParams.size) : 10;
-
-    const result = await this.transactionModel
-      .query()
-      .where('receiver_account_id', receiver_account_id)
-      .orderBy('created_at', 'DESC')
-      .page(page - 1, size);
-
-    if (!result || result.total === 0) {
-      throw new HttpException(
-        `user with account_id: ${receiver_account_id} has not received any money`,
-        HttpStatus.NOT_FOUND,
-      );
-    }
     const totalPages = Math.ceil(result.total / size);
 
     return {

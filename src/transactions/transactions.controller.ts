@@ -27,12 +27,13 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiSecurity,
+  ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { PaginationResponseDto } from './dto/paginate.dto';
 import { ADMIN_ROLES, IReqUser } from 'src/base.entity';
 import { Roles } from 'src/auth/role.decorator';
-
+@ApiTags('Transaction')
 @Controller('transactions')
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
@@ -85,49 +86,24 @@ export class TransactionsController {
     }
   }
 
-  @ApiOperation({ summary: 'Get Transactions by Sender Account ID' })
+  @ApiOperation({ summary: 'Get Transactions by Account ID' })
   @ApiOkResponse({
     type: PaginationResponseDto,
-    description: 'Transactions successfully fetched by sender_account_id',
+    description: 'Transactions successfully fetched by account_id',
   })
   @ApiNotFoundResponse({
-    description: 'Transactions not found with the given sender_account_id',
+    description: 'Transactions not found with the given account_id',
   })
   @ApiBadRequestResponse()
   @ApiSecurity('access_token')
-  @Get('sender/:sender_account_id')
-  getTransactionsBySenderId(
-    @Param('user_id', new ParseUUIDPipe()) sender_account_id: string,
+  @Get('account/:account_id')
+  getTransactionsByAccountId(
+    @Param('user_id', new ParseUUIDPipe()) account_id: string,
     @Query() query?: TransactionFilter,
   ) {
     try {
-      return this.transactionsService.getTransactionsBySenderId(
-        sender_account_id,
-        query,
-      );
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  @ApiOperation({ summary: 'Get Transactions by Receiver Account ID' })
-  @ApiOkResponse({
-    type: PaginationResponseDto,
-    description: 'Transactions successfully fetched by receiver_account_id',
-  })
-  @ApiNotFoundResponse({
-    description: 'Transactions not found with the given receiver_account_id',
-  })
-  @ApiBadRequestResponse()
-  @ApiSecurity('access_token')
-  @Get('receiver/:receiver_account_id')
-  getTransactionsByReceiverId(
-    @Param('user_id', new ParseUUIDPipe()) receiver_account_id: string,
-    @Query() query?: TransactionFilter,
-  ) {
-    try {
-      return this.transactionsService.getTransactionsByReceiverId(
-        receiver_account_id,
+      return this.transactionsService.getTransactionsByAccountId(
+        account_id,
         query,
       );
     } catch (error) {

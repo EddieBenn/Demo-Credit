@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { BaseEntity } from '../../base.entity';
 import { Transaction } from 'src/transactions/entities/transaction.entity';
+import { Model } from 'objection';
 
 export class Account extends BaseEntity {
   static tableName = 'accounts';
@@ -19,11 +20,11 @@ export class Account extends BaseEntity {
 
   static relationMappings = {
     senderAccount: {
-      relation: Transaction.BelongsToOneRelation,
-      modelClass: Account,
+      relation: Model.HasManyRelation,
+      modelClass: Transaction,
       join: {
-        from: 'transactions.sender_account_id',
-        to: 'accounts.id',
+        from: 'accounts.id',
+        to: 'transactions.sender_account_id',
       },
     },
   };
