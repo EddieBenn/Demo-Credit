@@ -94,10 +94,10 @@ export class AccountsController {
   })
   @ApiBadRequestResponse()
   @ApiSecurity('access_token')
-  @Get('user/:user_id')
-  getAccountByUserId(@Param('user_id', new ParseUUIDPipe()) user_id: string) {
+  @Get('user/:userId')
+  getAccountByUserId(@Param('userId', new ParseUUIDPipe()) userId: string) {
     try {
-      return this.accountsService.getAccountByUserId(user_id);
+      return this.accountsService.getAccountByUserId(userId);
     } catch (error) {
       throw error;
     }

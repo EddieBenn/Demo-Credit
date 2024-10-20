@@ -96,14 +96,14 @@ export class TransactionsController {
   })
   @ApiBadRequestResponse()
   @ApiSecurity('access_token')
-  @Get('account/:account_id')
+  @Get('account/:accountId')
   getTransactionsByAccountId(
-    @Param('user_id', new ParseUUIDPipe()) account_id: string,
+    @Param('accountId', new ParseUUIDPipe()) accountId: string,
     @Query() query?: TransactionFilter,
   ) {
     try {
       return this.transactionsService.getTransactionsByAccountId(
-        account_id,
+        accountId,
         query,
       );
     } catch (error) {

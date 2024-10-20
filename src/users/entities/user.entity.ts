@@ -6,24 +6,24 @@ import { Account } from 'src/accounts/entities/account.entity';
 export class User extends BaseEntity {
   static tableName = 'users';
 
-  first_name: string;
-  last_name: string;
-  phone_number: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
   email: string;
   role: RolesEnum;
   password: string;
   gender: GenderEnum;
   city: string;
-  photo_url: string;
+  photoUrl: string;
   otp: string;
-  otp_expiry: Date;
-  is_verified: boolean;
-  demo_id: string;
+  otpExpiry: Date;
+  isVerified: boolean;
+  demoId: string;
 
   async $beforeInsert() {
     this.id = uuidv4();
-    this.first_name = this.first_name.toLowerCase();
-    this.last_name = this.last_name.toLowerCase();
+    this.firstName = this.firstName.toLowerCase();
+    this.lastName = this.lastName.toLowerCase();
     this.email = this.email.toLowerCase();
     this.city = this.city.toLowerCase();
   }
@@ -34,7 +34,7 @@ export class User extends BaseEntity {
       modelClass: Account,
       join: {
         from: 'users.id',
-        to: 'accounts.user_id',
+        to: 'accounts.userId',
       },
     },
   };

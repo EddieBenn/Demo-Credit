@@ -5,9 +5,17 @@ import { LocationCounterModule } from 'src/location-counter/location-counter.mod
 import { AccountsModule } from 'src/accounts/accounts.module';
 import { FileUploadService } from 'src/utils/cloudinary';
 import { AuthModule } from 'src/auth/auth.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
-  imports: [LocationCounterModule, AccountsModule, AuthModule],
+  imports: [
+    MulterModule.register({
+      dest: './users',
+    }),
+    LocationCounterModule,
+    AccountsModule,
+    AuthModule,
+  ],
   controllers: [UsersController],
   providers: [UsersService, FileUploadService],
 })

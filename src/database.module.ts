@@ -1,10 +1,13 @@
 import { Global, Module } from '@nestjs/common';
 import Knex from 'knex';
-import { knexSnakeCaseMappers, Model } from 'objection';
+import { Model } from 'objection';
 import { LocationCounter } from './location-counter/entities/location-counter.entity';
 import { Account } from './accounts/entities/account.entity';
 import { Transaction } from './transactions/entities/transaction.entity';
 import { User } from './users/entities/user.entity';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const models = [LocationCounter, Account, Transaction, User];
 
@@ -12,7 +15,6 @@ const modelProviders = models.map((model) => ({
   provide: model.name,
   useValue: model,
 }));
-
 const providers = [
   ...modelProviders,
   {
@@ -29,7 +31,6 @@ const providers = [
         },
         pool: { min: 2, max: 10 },
         useNullAsDefault: true,
-        ...knexSnakeCaseMappers(),
       });
 
       Model.knex(knex);

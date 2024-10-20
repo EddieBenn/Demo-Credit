@@ -31,26 +31,26 @@ export class UpdateTransactionResponseDto {
     example: '211aabb6-fc31-4851-98d4-f26e4e4f50aa',
     description: 'Account UUID of the sender',
   })
-  sender_account_id: string;
+  senderAccountId: string;
 
   @ApiProperty({
     required: false,
     example: 'caesar augustus',
     description: 'Name of the sender',
   })
-  sender_name: string;
+  senderName: string;
 
   @ApiProperty({
     required: false,
     example: '211aabb6-fc31-4851-98d4-f26e4e4f50aa',
     description: 'Account UUID of the receiver',
   })
-  receiver_account_id: string;
+  receiverAccountId: string;
 
   @ApiProperty({
     required: false,
     example: 'julius caesar',
     description: 'Name of the receiver',
   })
-  receiver_name: string;
+  receiverName: string;
 }

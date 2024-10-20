@@ -34,7 +34,7 @@ export class TransactionsService {
     const result = await this.transactionModel
       .query()
       .where(query)
-      .orderBy('created_at', 'DESC')
+      .orderBy('createdAt', 'DESC')
       .page(page - 1, size);
 
     const totalPages = Math.ceil(result.total / size);
@@ -63,7 +63,7 @@ export class TransactionsService {
   }
 
   async getTransactionsByAccountId(
-    account_id: string,
+    accountId: string,
     queryParams?: TransactionFilter,
   ): Promise<PaginationResponseDto> {
     const page = queryParams?.page ? Number(queryParams?.page) : 1;
@@ -71,14 +71,14 @@ export class TransactionsService {
 
     const result = await this.transactionModel
       .query()
-      .where('sender_account_id', account_id)
-      .orWhere('receiver_account_id', account_id)
-      .orderBy('created_at', 'DESC')
+      .where('senderAccountId', accountId)
+      .orWhere('receiverAccountId', accountId)
+      .orderBy('createdAt', 'DESC')
       .page(page - 1, size);
 
     if (!result || result.total === 0) {
       throw new HttpException(
-        `no transactions found this user with account_id: ${account_id}`,
+        `no transactions found this user with accountId: ${accountId}`,
         HttpStatus.NOT_FOUND,
       );
     }
@@ -134,10 +134,7 @@ export class TransactionsService {
         HttpStatus.NOT_FOUND,
       );
     }
-    if (
-      user.role !== 'admin' &&
-      user.id !== transaction.senderAccount.user_id
-    ) {
+    if (user.role !== 'admin' && user.id !== transaction.senderAccount.userId) {
       throw new HttpException(
         "Unauthorized: You cannot delete another user's transaction",
         HttpStatus.UNAUTHORIZED,
