@@ -33,7 +33,7 @@ export class LocationCounterService {
     const result = await this.locationCounterModel
       .query()
       .where(query)
-      .orderBy('created_at', 'DESC')
+      .orderBy('createdAt', 'DESC')
       .page(page - 1, size);
 
     const totalPages = Math.ceil(result.total / size);
@@ -86,13 +86,13 @@ export class LocationCounterService {
     return this.locationCounterModel.query().deleteById(id);
   }
 
-  async generateDemoID(city: string, role: RolesEnum) {
+  async generateDemoID(city: string, role: string) {
     try {
       const generatedDemoId = await this.generateDemoIdByCity(city, role);
       if (generatedDemoId?.demoId && generatedDemoId.cityCode) {
         await this.locationCounterModel
           .query()
-          .findOne({ city_code: generatedDemoId.cityCode, role })
+          .findOne({ cityCode: generatedDemoId.cityCode, role })
           .increment('count', 1);
       }
       return generatedDemoId?.demoId;
@@ -104,7 +104,7 @@ export class LocationCounterService {
     }
   }
 
-  async generateDemoIdByCity(city: string, role: RolesEnum) {
+  async generateDemoIdByCity(city: string, role: string) {
     const record = await this.locationCounterModel
       .query()
       .findOne({ city: city.toLowerCase(), role });
@@ -115,10 +115,9 @@ export class LocationCounterService {
         HttpStatus.NOT_FOUND,
       );
     }
-    const cityCode = record.city_code;
+    const cityCode = record.cityCode;
     const newCount = record.count + 1;
     const demoIdPrefix = role === RolesEnum.ADMIN ? 'DEMO-AD' : 'DEMO';
-
     const demoId = `${demoIdPrefix}-${cityCode}-${newCount}`;
     return { demoId, cityCode };
   }

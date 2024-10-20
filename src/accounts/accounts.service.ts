@@ -28,7 +28,7 @@ export class AccountsService {
     const result = await this.accountModel
       .query()
       .where(query)
-      .orderBy('created_at', 'DESC')
+      .orderBy('createdAt', 'DESC')
       .page(page - 1, size);
 
     const totalPages = Math.ceil(result.total / size);
@@ -56,15 +56,15 @@ export class AccountsService {
     return account;
   }
 
-  async getAccountByUserId(user_id: string): Promise<CreateAccountDto> {
+  async getAccountByUserId(userId: string): Promise<CreateAccountDto> {
     const userAccount = await this.accountModel
       .query()
-      .where('user_id', user_id)
+      .where('userId', userId)
       .first();
 
     if (!userAccount?.id) {
       throw new HttpException(
-        `account with user_id: ${user_id} not found`,
+        `account with user_id: ${userId} not found`,
         HttpStatus.NOT_FOUND,
       );
     }
@@ -100,12 +100,16 @@ export class AccountsService {
       );
     }
 
-    if (user.role !== 'admin' && user.id !== account.user_id) {
+    if (user.role !== 'admin' && user.id !== account.userId) {
       throw new HttpException(
         "Unauthorized: You cannot delete another user's account",
         HttpStatus.UNAUTHORIZED,
       );
     }
     await this.accountModel.query().deleteById(id);
+  }
+
+  async deleteAccountByUserId(userId: string) {
+    return await this.accountModel.query().delete().where('userId', userId);
   }
 }

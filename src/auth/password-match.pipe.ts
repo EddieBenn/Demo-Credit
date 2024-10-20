@@ -9,9 +9,9 @@ import {
 @Injectable()
 export class PasswordMatch implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata) {
-    const { new_password, confirm_password } = value;
+    const { newPassword, confirmPassword } = value;
 
-    if (new_password !== confirm_password) {
+    if (newPassword !== confirmPassword) {
       throw new BadRequestException('Passwords do not match');
     }
 

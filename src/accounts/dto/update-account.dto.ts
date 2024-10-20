@@ -9,33 +9,33 @@ export class UpdateAccountResponseDto {
     example: 'john doe',
     description: 'Name on account',
   })
-  account_name: string;
+  accountName: string;
 
   @ApiProperty({
     required: false,
     example: '0331183993',
     description: 'Account number',
   })
-  account_number: string;
+  accountNumber: string;
 
   @ApiProperty({
     required: false,
     example: '100000',
     description: 'Balance of the account',
   })
-  account_balance: string;
+  accountBalance: string;
 
   @ApiProperty({
     required: false,
     example: 'zenith bank ',
     description: 'Name of the bank',
   })
-  bank_name: string;
+  bankName: string;
 
   @ApiProperty({
     required: false,
     example: '211aabb6-fc31-4851-98d4-f26e4e4f50aa',
     description: 'Id of the user',
   })
-  user_id: string;
+  userId: string;
 }

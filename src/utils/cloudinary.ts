@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
-import { v2 as cloudinary } from 'cloudinary';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
-import multer from 'multer';
+import {
+  v2 as cloudinary,
+  UploadApiErrorResponse,
+  UploadApiResponse,
+} from 'cloudinary';
 import * as dotenv from 'dotenv';
-import { Request } from 'express';
 
 dotenv.config();
 
@@ -18,19 +19,10 @@ export class FileUploadService {
     });
   }
 
-  private storage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: async (req: Request, file) => {
-      return {
-        folder: 'Demo-Credit',
-      };
-    },
-  });
-
-  public upload = multer({
-    storage: this.storage,
-    limits: { fileSize: 10 * 1024 * 1024 },
-    fileFilter: (req: Request, file, cb) => {
+  async uploadFile(
+    file: Express.Multer.File,
+  ): Promise<UploadApiResponse | UploadApiErrorResponse> {
+    return new Promise((resolve, reject) => {
       const allowedMimeTypes = [
         'image/png',
         'image/jpg',
@@ -39,15 +31,31 @@ export class FileUploadService {
         'image/gif',
         'image/avif',
       ];
-      if (allowedMimeTypes.includes(file.mimetype)) {
-        cb(null, true);
-      } else {
-        cb(
+
+      if (!allowedMimeTypes.includes(file.mimetype)) {
+        return reject(
           new Error(
             'Only .png, .jpg, .jpeg, .webp, .gif, and .avif formats are allowed',
           ),
         );
       }
-    },
-  });
+
+      if (file.size > 5 * 1024 * 1024) {
+        return reject(new Error('File size exceeds 5MB limit'));
+      }
+
+      try {
+        cloudinary.uploader.upload(
+          file.path,
+          { folder: 'Demo-Credit' },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          },
+        );
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
 }

@@ -10,9 +10,9 @@ export class BaseEntity extends Model {
   }
 
   id?: string;
-  created_at?: Date | string;
-  updated_at?: Date | string;
-  deleted_at?: Date | string | null;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
 }
 
 export enum RolesEnum {
@@ -35,6 +35,11 @@ export enum StatusEnum {
   FAILED = 'failed',
 }
 
+export enum GenderEnum {
+  MALE = 'male',
+  FEMALE = 'female',
+}
+
 export interface IPagination {
   totalRows: number;
   perPage: number;
@@ -45,11 +50,13 @@ export interface IPagination {
 
 export interface IReqUser {
   id: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  phone: string;
+  phoneNumber: string;
   city: string;
   role: string;
-  demo_id?: string;
+  photoUrl: string;
+  demoId: string;
+  isVerified: boolean;
 }

@@ -24,7 +24,7 @@ export class CreateLocationCounterDto {
   @ApiProperty({ example: 'LA', description: 'Code of each city' })
   @IsNotEmpty()
   @IsString()
-  city_code: string;
+  cityCode: string;
 
   @ApiProperty({ example: 'admin', description: 'Role of the user' })
   @IsNotEmpty()
@@ -35,8 +35,8 @@ export class CreateLocationCounterDto {
 export interface LocationCounterFilter {
   city?: string;
   role?: string;
-  start_date?: string;
-  end_date?: string;
+  startDate?: string;
+  endDate?: string;
   isPaginate?: boolean;
   size?: number;
   page?: number;

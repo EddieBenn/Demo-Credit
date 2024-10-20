@@ -1,12 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  IsUUID,
-  MinLength,
-} from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID, MinLength } from 'class-validator';
 
 export class CreateAccountDto {
   @ApiProperty({
@@ -17,7 +11,7 @@ export class CreateAccountDto {
   @Transform((val) => val.value.toLowerCase())
   @IsNotEmpty()
   @IsString()
-  account_name: string;
+  accountName: string;
 
   @ApiProperty({
     required: true,
@@ -27,16 +21,7 @@ export class CreateAccountDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(10)
-  account_number: string;
-
-  @ApiProperty({
-    required: true,
-    example: '100000',
-    description: 'Balance of the account',
-  })
-  @IsNotEmpty()
-  @IsNumber()
-  account_balance: number;
+  accountNumber: string;
 
   @ApiProperty({
     required: true,
@@ -46,7 +31,7 @@ export class CreateAccountDto {
   @Transform((val) => val.value.toLowerCase())
   @IsNotEmpty()
   @IsString()
-  bank_name: string;
+  bankName: string;
 
   @ApiProperty({
     required: true,
@@ -55,16 +40,16 @@ export class CreateAccountDto {
   })
   @IsNotEmpty()
   @IsUUID()
-  user_id: string;
+  userId: string;
 }
 
 export interface AccountFilter {
-  account_name?: string;
-  account_number?: string;
-  bank_name?: string;
-  user_id?: string;
-  start_date?: string;
-  end_date?: string;
+  accountName?: string;
+  accountNumber?: string;
+  bankName?: string;
+  userId?: string;
+  startDate?: string;
+  endDate?: string;
   isPaginate?: boolean;
   size?: number;
   page?: number;

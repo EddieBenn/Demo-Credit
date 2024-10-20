@@ -11,14 +11,20 @@ import {
   ExpressAdapter,
   type NestExpressApplication,
 } from '@nestjs/platform-express';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(
     AppModule,
     new ExpressAdapter(),
-    { cors: true },
+    {
+      cors: {
+        origin: '*',
+        credentials: true,
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      },
+    },
   );
   const configService = app.get(ConfigService);
 
@@ -27,7 +33,6 @@ async function bootstrap(): Promise<NestExpressApplication> {
   const PORT = +configService.get('PORT') || 3001;
 
   app.use(cookieParser());
-
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
