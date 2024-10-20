@@ -10,17 +10,17 @@ export class Transaction extends BaseEntity {
   status: StatusEnum;
   description: string;
   amount: number;
-  sender_account_id: string;
-  sender_name: string;
-  receiver_account_id: string;
-  receiver_name: string;
+  senderAccountId: string;
+  senderName: string;
+  receiverAccountId: string;
+  receiverName: string;
 
   senderAccount?: Account;
 
   async $beforeInsert() {
     this.id = uuidv4();
-    this.sender_name = this.sender_name.toLowerCase();
-    this.receiver_name = this.receiver_name.toLowerCase();
+    this.senderName = this.senderName.toLowerCase();
+    this.receiverName = this.receiverName.toLowerCase();
   }
 
   static relationMappings = {
@@ -28,7 +28,7 @@ export class Transaction extends BaseEntity {
       relation: Model.BelongsToOneRelation,
       modelClass: Account,
       join: {
-        from: 'transactions.sender_account_id',
+        from: 'transactions.senderAccountId',
         to: 'accounts.id',
       },
     },

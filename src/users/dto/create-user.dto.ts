@@ -15,12 +15,12 @@ export class CreateUserDto {
   @ApiProperty({ example: 'John', description: 'First name of the user' })
   @IsNotEmpty()
   @IsString()
-  first_name: string;
+  firstName: string;
 
   @ApiProperty({ example: 'Doe', description: 'Last name of the user' })
   @IsNotEmpty()
   @IsString()
-  last_name: string;
+  lastName: string;
 
   @ApiProperty({
     example: '+2348104467932',
@@ -29,7 +29,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(10)
-  phone_number: string;
+  phoneNumber: string;
 
   @ApiProperty({
     example: 'user@example.com',
@@ -77,12 +77,12 @@ export class CreateUserDto {
   })
   @IsOptional()
   @IsString()
-  photo_url: string;
+  photoUrl: string;
 }
 
 export class LoginDto {
   @ApiProperty({
-    example: 'juliusbenjamin@gmail.com',
+    example: 'eddiebenjamin247@gmail.com',
     description: 'The email of the user',
   })
   @Transform((val) => val.value.toLowerCase())
@@ -91,7 +91,7 @@ export class LoginDto {
   email: string;
 
   @ApiProperty({
-    example: 'Password5%',
+    example: 'Strongpassword1234*',
     description: 'The password of the user',
   })
   @IsNotEmpty()
@@ -129,7 +129,7 @@ export class ForgotPasswordDto {
         'Password must be at least 6 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character.',
     },
   )
-  new_password: string;
+  newPassword: string;
 
   @ApiProperty({
     example: 'Strongpassword123@',
@@ -144,7 +144,7 @@ export class ForgotPasswordDto {
         'Confirm password must be at least 6 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character.',
     },
   )
-  confirm_password: string;
+  confirmPassword: string;
 }
 
 export class VerifyOtpDto {
@@ -177,37 +177,37 @@ export class VerifyOtpDto {
         'Password must be at least 6 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character.',
     },
   )
-  new_password?: string;
+  newPassword?: string;
 }
 
 export interface IUser {
   id?: string;
-  first_name: string;
-  last_name: string;
-  phone_number: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
   email: string;
   role: RolesEnum;
   password: string;
   gender: GenderEnum;
   city: string;
-  photo_url: string;
+  photoUrl: string;
   otp: string;
-  otp_expiry: Date;
-  is_verified: boolean;
-  demo_id: string;
+  otpExpiry: Date;
+  isVerified: boolean;
+  demoId: string;
 }
 
 export interface UserFilter {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  phone_number: string;
+  phoneNumber: string;
   gender: string;
   city: string;
   role: string;
-  demo_id: string;
-  start_date?: string;
-  end_date?: string;
+  demoId: string;
+  startDate?: string;
+  endDate?: string;
   size?: number;
   page?: number;
 }

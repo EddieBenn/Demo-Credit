@@ -10,21 +10,21 @@ export class UpdateUserResponseDto {
     example: 'John',
     description: 'First name of the user',
   })
-  first_name: string;
+  firstName: string;
 
   @ApiProperty({
     required: false,
     example: 'Doe',
     description: 'Last name of the user',
   })
-  last_name: string;
+  lastName: string;
 
   @ApiProperty({
     required: false,
     example: '+2348104467932',
     description: 'Phone number of the user',
   })
-  phone_number: string;
+  phoneNumber: string;
 
   @ApiProperty({
     required: false,
@@ -52,5 +52,5 @@ export class UpdateUserResponseDto {
     example: 'https://www.photourl.com',
     description: 'Photo url of the user',
   })
-  photo_url: string;
+  photoUrl: string;
 }

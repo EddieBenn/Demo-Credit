@@ -46,7 +46,7 @@ export class CreateTransactionDto {
   })
   @IsNotEmpty()
   @IsUUID()
-  sender_account_id: string;
+  senderAccountId: string;
 
   @ApiProperty({
     required: true,
@@ -56,7 +56,7 @@ export class CreateTransactionDto {
   @Transform((val) => val.value.toLowerCase())
   @IsNotEmpty()
   @IsString()
-  sender_name: string;
+  senderName: string;
 
   @ApiProperty({
     required: true,
@@ -65,7 +65,7 @@ export class CreateTransactionDto {
   })
   @IsNotEmpty()
   @IsUUID()
-  receiver_account_id: string;
+  receiverAccountId: string;
 
   @ApiProperty({
     required: true,
@@ -75,19 +75,19 @@ export class CreateTransactionDto {
   @Transform((val) => val.value.toLowerCase())
   @IsNotEmpty()
   @IsString()
-  receiver_name: string;
+  receiverName: string;
 }
 
 export interface TransactionFilter {
   type?: string;
   status?: string;
   amount?: string;
-  sender_account_id?: string;
-  sender_name?: string;
-  receiver_account_id?: string;
-  receiver_name?: string;
-  start_date?: string;
-  end_date?: string;
+  senderAccountId?: string;
+  senderName?: string;
+  receiverAccountId?: string;
+  receiverName?: string;
+  startDate?: string;
+  endDate?: string;
   isPaginate?: boolean;
   size?: number;
   page?: number;

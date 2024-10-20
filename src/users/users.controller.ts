@@ -11,18 +11,29 @@ import {
   Req,
   UseInterceptors,
   UploadedFile,
+  UsePipes,
+  Res,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto, UserFilter } from './dto/create-user.dto';
+import {
+  CreateUserDto,
+  ForgotPasswordDto,
+  LoginDto,
+  UserFilter,
+  VerifyOtpDto,
+} from './dto/create-user.dto';
 import { UpdateUserDto, UpdateUserResponseDto } from './dto/update-user.dto';
 import {
   ApiBadRequestResponse,
   ApiBody,
+  ApiCookieAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiResponse,
   ApiSecurity,
+  ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { PaginationResponseDto } from './dto/paginate.dto';
@@ -30,7 +41,11 @@ import { ADMIN_ROLES, IReqUser } from 'src/base.entity';
 import { Roles } from 'src/auth/role.decorator';
 import { FileUploadService } from '../utils/cloudinary';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { SkipAuth } from 'src/auth/auth.decorator';
+import { PasswordMatch } from 'src/auth/password-match.pipe';
+import { Response } from 'express';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(
@@ -44,8 +59,9 @@ export class UsersController {
   @ApiUnauthorizedResponse()
   @ApiBadRequestResponse()
   @ApiSecurity('access_token')
+  @SkipAuth()
   @Post()
-  @UseInterceptors(FileInterceptor('photo_url'))
+  @UseInterceptors(FileInterceptor('photoUrl'))
   async createUser(
     @Body() body: CreateUserDto,
     @Req() req: any,
@@ -53,11 +69,9 @@ export class UsersController {
   ) {
     try {
       const user = req?.user as IReqUser;
-      const uploadedPhoto = await this.fileUploadService.upload.single(
-        file.path,
-      );
+      const uploadedPhoto = await this.fileUploadService.uploadFile(file);
       if (uploadedPhoto) {
-        body.photo_url = file.path;
+        body.photoUrl = uploadedPhoto.secure_url;
       }
       return this.usersService.createUser(body, user);
     } catch (error) {
@@ -74,7 +88,7 @@ export class UsersController {
   @ApiSecurity('access_token')
   @Roles(ADMIN_ROLES.ADMIN)
   @Get()
-  getAllAccounts(@Query() query: UserFilter) {
+  getAllUsers(@Query() query: UserFilter) {
     try {
       return this.usersService.getAllUsers(query);
     } catch (error) {
@@ -91,7 +105,7 @@ export class UsersController {
   @ApiBadRequestResponse()
   @ApiSecurity('access_token')
   @Get(':id')
-  getAccountById(@Param('id', new ParseUUIDPipe()) id: string) {
+  getUserById(@Param('id', new ParseUUIDPipe()) id: string) {
     try {
       return this.usersService.getUserById(id);
     } catch (error) {
@@ -105,7 +119,7 @@ export class UsersController {
   @ApiBadRequestResponse()
   @ApiSecurity('access_token')
   @Put(':id')
-  updateAccountById(
+  updateUserById(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: UpdateUserDto,
   ) {
@@ -125,13 +139,83 @@ export class UsersController {
   @ApiBadRequestResponse()
   @ApiSecurity('access_token')
   @Delete(':id')
-  async deleteAccountById(
+  async deleteUserById(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Req() req: any,
   ) {
     const user = req?.user as IReqUser;
     try {
       return await this.usersService.deleteUserById(id, user);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @ApiOperation({ summary: 'Reset User Password' })
+  @ApiBody({ type: ForgotPasswordDto })
+  @ApiOkResponse({
+    description: 'OTP has been sent to your email for password reset',
+  })
+  @ApiNotFoundResponse({ description: 'User not found' })
+  @ApiBadRequestResponse()
+  @Post('forgot-password')
+  @SkipAuth()
+  @UsePipes(PasswordMatch)
+  async forgotPassword(@Body() body: ForgotPasswordDto, @Res() res: Response) {
+    try {
+      return this.usersService.forgotPassword(body, res);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @ApiOperation({ summary: 'Verify OTP' })
+  @ApiBody({ type: VerifyOtpDto })
+  @ApiResponse({
+    status: 200,
+    description: 'User verified or password reset successful',
+  })
+  @ApiNotFoundResponse({ description: 'User not found' })
+  @ApiBadRequestResponse({ description: 'OTP is invalid or expired' })
+  @SkipAuth()
+  @Post('verify-otp')
+  async verifyOTP(@Body() data: VerifyOtpDto, @Res() res: Response) {
+    try {
+      return this.usersService.verifyOTP(data, res);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @ApiOperation({ summary: 'User Login' })
+  @ApiBody({ type: LoginDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Login successful, access token generated',
+  })
+  @ApiNotFoundResponse({ description: 'User not found' })
+  @ApiUnauthorizedResponse({ description: 'Invalid password' })
+  @ApiCookieAuth('access_token')
+  @SkipAuth()
+  @Post('login')
+  async login(@Body() data: LoginDto, @Res() res: Response) {
+    try {
+      return await this.usersService.loginUser(data, res);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @ApiOperation({
+    summary: 'Logout User',
+    description: 'User successfully logged out',
+  })
+  @ApiOkResponse()
+  @ApiBadRequestResponse()
+  @Post('logout')
+  async logout(@Res() res: Response) {
+    try {
+      return this.usersService.logoutUser(res);
     } catch (error) {
       throw error;
     }

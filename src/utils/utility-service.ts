@@ -34,7 +34,9 @@ class UtilityService {
 
   getOTP() {
     const otp = otpGenerator.generate(6, {
+      digits: true,
       upperCaseAlphabets: false,
+      lowerCaseAlphabets: false,
       specialChars: false,
     });
     const expiry = moment().add(30, 'minutes').toDate();

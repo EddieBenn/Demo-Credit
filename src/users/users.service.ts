@@ -21,7 +21,7 @@ import { LocationCounterService } from 'src/location-counter/location-counter.se
 import { UtilService } from 'src/utils/utility-service';
 import { myTransaction } from 'src/utils/transaction';
 import { sendMail } from 'src/utils/nodemailer';
-import { IReqUser, RolesEnum } from 'src/base.entity';
+import { IReqUser, RolesEnum } from '../base.entity';
 import { buildUserFilter } from 'src/filters/query-filter';
 import { CreateAccountDto } from 'src/accounts/dto/create-account.dto';
 import { AccountsService } from 'src/accounts/accounts.service';
@@ -45,21 +45,20 @@ export class UsersService {
     data: CreateUserDto,
     user?: IReqUser,
   ): Promise<CreateUserDto> {
-    const { email, phone_number, role } = data;
+    const { email, phoneNumber, role } = data;
     const userDetailsExist = await this.userModel
       .query()
       .where((builder) => {
-        builder.where('email', email).orWhere('phone_number', phone_number);
+        builder.where('email', email).orWhere('phoneNumber', phoneNumber);
       })
       .first();
 
     if (userDetailsExist) {
       throw new HttpException(
-        `user with email: ${email} or phone number:  ${phone_number} already exist`,
+        `user with email: ${email} or phone number:  ${phoneNumber} already exist`,
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
-
     if (user?.role !== RolesEnum.ADMIN && role === RolesEnum.ADMIN) {
       throw new HttpException(
         'You are not authorized to create an admin, kindly login as an admin',
@@ -78,9 +77,9 @@ export class UsersService {
       ...data,
       password: hashedPassword,
       otp,
-      otp_expiry: expiry,
-      is_verified: false,
-      demo_id: generatedDemoId,
+      otpExpiry: expiry,
+      isVerified: false,
+      demoId: generatedDemoId,
     };
 
     const createdUser = await myTransaction(this.userModel, async (trx) => {
@@ -88,16 +87,16 @@ export class UsersService {
     });
     await sendMail(
       email,
-      `Kindly verify you email with the OTP below`,
+      `Kindly verify your email with the OTP below`,
       `Verify OTP`,
       `${otp}`,
     );
     if (createdUser) {
       const userAccount: CreateAccountDto = {
-        account_name: `${data.first_name.toLowerCase()} ${data.last_name.toLowerCase()}`,
-        account_number: UtilService.getAccountNumber(data.phone_number),
-        bank_name: 'demo credit',
-        user_id: createdUser.id,
+        accountName: `${data.firstName.toLowerCase()} ${data.lastName.toLowerCase()}`,
+        accountNumber: UtilService.getAccountNumber(data.phoneNumber),
+        bankName: 'demo credit',
+        userId: createdUser.id,
       };
       await this.accountsService.createAccount(userAccount);
     }
@@ -112,7 +111,7 @@ export class UsersService {
     const result = await this.userModel
       .query()
       .where(query)
-      .orderBy('created_at', 'DESC')
+      .orderBy('createdAt', 'DESC')
       .page(page - 1, size);
 
     const totalPages = Math.ceil(result.total / size);
@@ -176,6 +175,7 @@ export class UsersService {
       );
     }
     await this.userModel.query().deleteById(id);
+    await this.accountsService.deleteAccountByUserId(id);
   }
 
   async forgotPassword(data: ForgotPasswordDto, res: Response) {
@@ -193,7 +193,7 @@ export class UsersService {
     const { otp, expiry } = UtilService.getOTP();
     await this.userModel
       .query()
-      .patch({ otp, otp_expiry: expiry })
+      .patch({ otp, otpExpiry: expiry })
       .where({ email: data.email });
 
     await sendMail(
@@ -222,18 +222,18 @@ export class UsersService {
     }
     if (
       user.otp !== data.otp ||
-      Date.now() > new Date(user.otp_expiry).getTime()
+      Date.now() > new Date(user.otpExpiry).getTime()
     ) {
       throw new HttpException(
-        'OTP is invalid or expired',
+        'OTP is invalid or expired, try resetting your password again',
         HttpStatus.BAD_REQUEST,
       );
     }
-    if (data.new_password) {
-      const hashedPassword = await UtilService.hashPassword(data.new_password);
+    if (data.newPassword) {
+      const hashedPassword = await UtilService.hashPassword(data.newPassword);
       await this.userModel
         .query()
-        .patch({ password: hashedPassword, otp: null, otp_expiry: null })
+        .patch({ password: hashedPassword, otp: null, otpExpiry: null })
         .where({ email: data.email });
 
       return res.status(HttpStatus.OK).json({
@@ -242,7 +242,7 @@ export class UsersService {
     } else {
       await this.userModel
         .query()
-        .patch({ is_verified: true, otp: null, otp_expiry: null })
+        .patch({ isVerified: true, otp: null, otpExpiry: null })
         .where({ email: data.email });
 
       return res.status(HttpStatus.OK).json({
@@ -258,15 +258,15 @@ export class UsersService {
     if (!user?.id) {
       throw new NotFoundException(`User with email: ${email} not found`);
     }
-    if (!user.is_verified) {
+    if (!user.isVerified) {
       const currentTime = new Date();
-      const otpExpiryTime = new Date(user.otp_expiry);
+      const otpExpiryTime = new Date(user.otpExpiry);
 
       if (currentTime > otpExpiryTime) {
         const { otp, expiry } = UtilService.getOTP();
         await this.userModel
           .query()
-          .patch({ otp, otp_expiry: expiry })
+          .patch({ otp, otpExpiry: expiry })
           .where({ email });
 
         await sendMail(
@@ -304,15 +304,15 @@ export class UsersService {
 
     const tokenData = {
       id: user.id,
-      first_name: user.first_name,
-      last_name: user.last_name,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
-      phone_number: user.phone_number,
+      phoneNumber: user.phoneNumber,
       city: user.city,
       role: user.role,
-      photo_url: user.photo_url,
-      demo_id: user.demo_id,
-      is_verified: user.is_verified,
+      photoUrl: user.photoUrl,
+      demoId: user.demoId,
+      isVerified: user.isVerified,
     };
 
     const access_token = await this.authService.generateToken(tokenData);
@@ -327,7 +327,7 @@ export class UsersService {
     return res.status(HttpStatus.OK).json({
       user,
       access_token,
-      expires_at: moment().add(1, 'hour').format(),
+      expiresAt: moment().add(1, 'hour').format(),
     });
   }
 

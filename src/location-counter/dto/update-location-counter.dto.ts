@@ -21,7 +21,7 @@ export class UpdateLocationCounterResponseDto {
   count: number;
 
   @ApiProperty({ example: 'LA', description: 'Code of each city' })
-  city_code: string;
+  cityCode: string;
 
   @ApiProperty({ example: 'admin', description: 'Role of the user' })
   role: RolesEnum;
