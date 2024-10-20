@@ -53,8 +53,10 @@ export interface IReqUser {
   first_name: string;
   last_name: string;
   email: string;
-  phone: string;
+  phone_number: string;
   city: string;
   role: string;
-  demo_id?: string;
+  photo_url: string;
+  demo_id: string;
+  is_verified: boolean;
 }

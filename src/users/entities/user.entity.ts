@@ -15,7 +15,7 @@ export class User extends BaseEntity {
   gender: GenderEnum;
   city: string;
   photo_url: string;
-  otp: number;
+  otp: string;
   otp_expiry: Date;
   is_verified: boolean;
   demo_id: string;
