@@ -35,6 +35,11 @@ export enum StatusEnum {
   FAILED = 'failed',
 }
 
+export enum GenderEnum {
+  MALE = 'male',
+  FEMALE = 'female',
+}
+
 export interface IPagination {
   totalRows: number;
   perPage: number;

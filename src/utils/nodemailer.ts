@@ -17,11 +17,10 @@ const transport = nodemailer.createTransport({
   },
 });
 
-const sendMail = async (
+export const sendMail = async (
   to: string,
   message: string,
   subject: string,
-  actionLink?: string,
   actionText?: string,
 ) => {
   try {
@@ -30,9 +29,9 @@ const sendMail = async (
       to,
       subject,
       html: `<div style="text-align: center; padding: 25px; border-radius: 5px; border: 2px solid #27AE60;">
-              <h1>Welcome to Made In Naija Stores</h1>
+              <h1>Welcome to Demo Credit</h1>
               <p>${message}</p>
-              ${actionLink ? `<a href="${actionLink}" style="text-decoration: none; color: white; display: inline-block; background-color: #27AE60; padding: 10px 20px; border-radius: 10px;">${actionText}</a>` : ''}
+              ${actionText ? `<p style="text-decoration: none; color: white; display: inline-block; background-color: #27AE60; padding: 10px 20px; border-radius: 10px;">${actionText}</p>` : ''}
              </div>`,
     };
 
@@ -42,8 +41,4 @@ const sendMail = async (
     console.error('Error sending email:', err.message);
     throw new HttpException(err.message, HttpStatus.UNPROCESSABLE_ENTITY);
   }
-};
-
-export default {
-  sendMail,
 };

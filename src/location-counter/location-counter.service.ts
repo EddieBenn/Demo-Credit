@@ -115,7 +115,7 @@ export class LocationCounterService {
         HttpStatus.NOT_FOUND,
       );
     }
-    const cityCode = record.city_code;
+    const cityCode = record.city_code.toUpperCase();
     const newCount = record.count + 1;
     const demoIdPrefix = role === RolesEnum.ADMIN ? 'DEMO-AD' : 'DEMO';
 
