@@ -11,7 +11,7 @@ import {
   ExpressAdapter,
   type NestExpressApplication,
 } from '@nestjs/platform-express';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap(): Promise<NestExpressApplication> {
@@ -26,7 +26,7 @@ async function bootstrap(): Promise<NestExpressApplication> {
 
   const PORT = +configService.get('PORT') || 3001;
 
-  app.use(cookieParser());
+  app.use(cookieParser);
 
   app.useGlobalPipes(
     new ValidationPipe({

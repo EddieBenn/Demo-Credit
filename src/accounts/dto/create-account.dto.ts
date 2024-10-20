@@ -1,12 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  IsUUID,
-  MinLength,
-} from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID, MinLength } from 'class-validator';
 
 export class CreateAccountDto {
   @ApiProperty({
@@ -28,15 +22,6 @@ export class CreateAccountDto {
   @IsString()
   @MinLength(10)
   account_number: string;
-
-  @ApiProperty({
-    required: true,
-    example: '100000',
-    description: 'Balance of the account',
-  })
-  @IsNotEmpty()
-  @IsNumber()
-  account_balance: number;
 
   @ApiProperty({
     required: true,

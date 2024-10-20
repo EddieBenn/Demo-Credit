@@ -1,9 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
-import dotenv from 'dotenv';
 import otpGenerator from 'otp-generator';
-
-dotenv.config();
+import moment from 'moment';
 
 class UtilityService {
   hashPassword = async (password: string) => {
@@ -35,10 +33,27 @@ class UtilityService {
   }
 
   getOTP() {
-    return otpGenerator.generate(6, {
-      upperCaseAlphabets: false,
-      specialChars: false,
-    });
+    const otp = Number(
+      otpGenerator.generate(6, {
+        upperCaseAlphabets: false,
+        specialChars: false,
+      }),
+    );
+    const expiry = moment().add(30, 'minutes').toDate();
+    return {
+      otp,
+      expiry,
+    };
+  }
+
+  getAccountNumber(phoneNumber: string): string {
+    if (phoneNumber.startsWith('+234')) {
+      return phoneNumber.slice(4);
+    }
+    if (phoneNumber.startsWith('0')) {
+      return phoneNumber.slice(1);
+    }
+    return phoneNumber;
   }
 }
 
