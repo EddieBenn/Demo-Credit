@@ -1,5 +1,19 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { CreateUserDto, IUser, UserFilter } from './dto/create-user.dto';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import {
+  CreateUserDto,
+  ForgotPasswordDto,
+  IUser,
+  LoginDto,
+  UserFilter,
+  VerifyOtpDto,
+} from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { ModelClass } from 'objection';
@@ -11,6 +25,10 @@ import { IReqUser, RolesEnum } from 'src/base.entity';
 import { buildUserFilter } from 'src/filters/query-filter';
 import { CreateAccountDto } from 'src/accounts/dto/create-account.dto';
 import { AccountsService } from 'src/accounts/accounts.service';
+import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
+import moment from 'moment';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UsersService {
@@ -19,6 +37,8 @@ export class UsersService {
     private readonly userModel: ModelClass<User>,
     private readonly locationCounterService: LocationCounterService,
     private readonly accountsService: AccountsService,
+    private configService: ConfigService,
+    private readonly authService: AuthService,
   ) {}
 
   async createUser(
@@ -156,5 +176,170 @@ export class UsersService {
       );
     }
     await this.userModel.query().deleteById(id);
+  }
+
+  async forgotPassword(data: ForgotPasswordDto, res: Response) {
+    const user = await this.userModel
+      .query()
+      .where({ email: data.email })
+      .first();
+
+    if (!user?.id) {
+      throw new HttpException(
+        `User with email: ${data.email} not found`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    const { otp, expiry } = UtilService.getOTP();
+    await this.userModel
+      .query()
+      .patch({ otp, otp_expiry: expiry })
+      .where({ email: data.email });
+
+    await sendMail(
+      data.email,
+      `Kindly use this OTP to reset your password`,
+      'Reset Password OTP',
+      `${otp}`,
+    );
+
+    return res.status(HttpStatus.OK).json({
+      message: 'OTP has been sent to your email for password reset',
+    });
+  }
+
+  async verifyOTP(data: VerifyOtpDto, res: Response) {
+    const user = await this.userModel
+      .query()
+      .where({ email: data.email })
+      .first();
+
+    if (!user?.id) {
+      throw new HttpException(
+        `User with email: ${data.email} not found`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    if (
+      user.otp !== data.otp ||
+      Date.now() > new Date(user.otp_expiry).getTime()
+    ) {
+      throw new HttpException(
+        'OTP is invalid or expired',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (data.new_password) {
+      const hashedPassword = await UtilService.hashPassword(data.new_password);
+      await this.userModel
+        .query()
+        .patch({ password: hashedPassword, otp: null, otp_expiry: null })
+        .where({ email: data.email });
+
+      return res.status(HttpStatus.OK).json({
+        message: 'Password reset successful',
+      });
+    } else {
+      await this.userModel
+        .query()
+        .patch({ is_verified: true, otp: null, otp_expiry: null })
+        .where({ email: data.email });
+
+      return res.status(HttpStatus.OK).json({
+        message: 'User verified successfully',
+      });
+    }
+  }
+
+  async loginUser(data: LoginDto, res: Response) {
+    const { email, password } = data;
+    const user = await this.userModel.query().where({ email }).first();
+
+    if (!user?.id) {
+      throw new NotFoundException(`User with email: ${email} not found`);
+    }
+    if (!user.is_verified) {
+      const currentTime = new Date();
+      const otpExpiryTime = new Date(user.otp_expiry);
+
+      if (currentTime > otpExpiryTime) {
+        const { otp, expiry } = UtilService.getOTP();
+        await this.userModel
+          .query()
+          .patch({ otp, otp_expiry: expiry })
+          .where({ email });
+
+        await sendMail(
+          email,
+          `Kindly verify your email with the OTP below`,
+          `Verify OTP`,
+          `${otp}`,
+        );
+
+        throw new HttpException(
+          {
+            status: HttpStatus.FORBIDDEN,
+            error: `A new OTP has been sent to your email. Please verify your account with the new OTP.`,
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      }
+
+      // throw error if the OTP is still valid but the user is not verified
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: `Your email is not verified. Please verify with the OTP sent to your email.`,
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    }
+    const isPasswordValid = await UtilService.validatePassword(
+      password,
+      user.password,
+    );
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid password');
+    }
+
+    const tokenData = {
+      id: user.id,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      phone_number: user.phone_number,
+      city: user.city,
+      role: user.role,
+      photo_url: user.photo_url,
+      demo_id: user.demo_id,
+      is_verified: user.is_verified,
+    };
+
+    const access_token = await this.authService.generateToken(tokenData);
+
+    res.cookie('access_token', access_token, {
+      httpOnly: true,
+      secure: this.configService.get<string>('NODE_ENV') === 'production',
+      expires: moment().add(1, 'hour').toDate(),
+      sameSite: 'strict',
+    });
+
+    return res.status(HttpStatus.OK).json({
+      user,
+      access_token,
+      expires_at: moment().add(1, 'hour').format(),
+    });
+  }
+
+  async logoutUser(res: Response) {
+    res.clearCookie('access_token', {
+      httpOnly: true,
+      secure: this.configService.get<string>('NODE_ENV') === 'production',
+      sameSite: 'strict',
+    });
+
+    return res.status(HttpStatus.OK).json({
+      message: 'Logout successful',
+    });
   }
 }
