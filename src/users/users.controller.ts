@@ -9,6 +9,8 @@ import {
   ParseUUIDPipe,
   Put,
   Req,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, UserFilter } from './dto/create-user.dto';
@@ -26,13 +28,13 @@ import {
 import { PaginationResponseDto } from './dto/paginate.dto';
 import { ADMIN_ROLES, IReqUser } from 'src/base.entity';
 import { Roles } from 'src/auth/role.decorator';
-// import { FileUploadService } from '../utils/cloudinary';
+import { FileUploadService } from '../utils/cloudinary';
 
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    // private readonly fileUploadService: FileUploadService,
+    private readonly fileUploadService: FileUploadService,
   ) {}
 
   @ApiOperation({ summary: 'Create User' })
@@ -42,17 +44,17 @@ export class UsersController {
   @ApiBadRequestResponse()
   @ApiSecurity('access_token')
   @Post()
-  // @UseInterceptors(FileUploadService.prototype.upload.single('photo_url'))
+  @UseInterceptors(FileUploadService.prototype.upload.single('photo_url'))
   async createUser(
     @Body() body: CreateUserDto,
     @Req() req: any,
-    // @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File,
   ) {
     try {
       const user = req?.user as IReqUser;
-      // if (file) {
-      //   body.photo_url = file.path;
-      // }
+      if (file) {
+        body.photo_url = file.path;
+      }
       return this.usersService.createUser(body, user);
     } catch (error) {
       throw error;
