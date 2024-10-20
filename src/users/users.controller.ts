@@ -29,6 +29,7 @@ import { PaginationResponseDto } from './dto/paginate.dto';
 import { ADMIN_ROLES, IReqUser } from 'src/base.entity';
 import { Roles } from 'src/auth/role.decorator';
 import { FileUploadService } from '../utils/cloudinary';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 export class UsersController {
@@ -44,7 +45,7 @@ export class UsersController {
   @ApiBadRequestResponse()
   @ApiSecurity('access_token')
   @Post()
-  @UseInterceptors(FileUploadService.prototype.upload.single('photo_url'))
+  @UseInterceptors(FileInterceptor('photo_url'))
   async createUser(
     @Body() body: CreateUserDto,
     @Req() req: any,
@@ -52,7 +53,10 @@ export class UsersController {
   ) {
     try {
       const user = req?.user as IReqUser;
-      if (file) {
+      const uploadedPhoto = await this.fileUploadService.upload.single(
+        file.path,
+      );
+      if (uploadedPhoto) {
         body.photo_url = file.path;
       }
       return this.usersService.createUser(body, user);
