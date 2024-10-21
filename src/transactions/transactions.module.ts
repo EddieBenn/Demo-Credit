@@ -7,5 +7,6 @@ import { UsersModule } from 'src/users/users.module';
   imports: [forwardRef(() => UsersModule)],
   controllers: [TransactionsController],
   providers: [TransactionsService],
+  exports: [TransactionsService],
 })
 export class TransactionsModule {}
