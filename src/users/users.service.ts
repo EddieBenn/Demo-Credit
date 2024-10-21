@@ -225,7 +225,7 @@ export class UsersService {
       Date.now() > new Date(user.otpExpiry).getTime()
     ) {
       throw new HttpException(
-        'OTP is invalid or expired, try resetting your password again',
+        'OTP is invalid or expired, try logging in to get a new OTP',
         HttpStatus.BAD_REQUEST,
       );
     }

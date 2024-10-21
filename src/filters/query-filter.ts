@@ -57,6 +57,7 @@ export const buildTransactionFilter = async (
   const query = {};
   if (queryParams?.type) query['type'] = queryParams.type.toLowerCase();
   if (queryParams?.status) query['status'] = queryParams.status.toLowerCase();
+  if (queryParams?.source) query['source'] = queryParams.source.toLowerCase();
   if (queryParams?.amount) query['amount'] = queryParams.amount;
   if (queryParams?.senderAccountId)
     query['senderAccountId'] = queryParams.senderAccountId;

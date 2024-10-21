@@ -1,6 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsString, IsUUID, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  IsUUID,
+  MinLength,
+} from 'class-validator';
+import { TypeEnum } from 'src/base.entity';
 
 export class CreateAccountDto {
   @ApiProperty({
@@ -41,6 +50,32 @@ export class CreateAccountDto {
   @IsNotEmpty()
   @IsUUID()
   userId: string;
+}
+
+export class UpdateBalanceDto {
+  @ApiProperty({
+    required: true,
+    example: 'johndoe@gmail.com',
+    description: 'Users email',
+  })
+  @Transform((val) => val.value.toLowerCase())
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+
+  @ApiProperty({
+    required: true,
+    example: '1000',
+    description: 'AMount to debit or credit',
+  })
+  @IsNotEmpty()
+  @IsNumber()
+  amount: number;
+
+  @ApiProperty({ example: 'credit', description: 'Type of transaction' })
+  @IsNotEmpty()
+  @IsEnum(TypeEnum)
+  operation: TypeEnum;
 }
 
 export interface AccountFilter {

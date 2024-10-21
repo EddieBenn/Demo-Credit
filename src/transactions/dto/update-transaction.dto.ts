@@ -1,6 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreateTransactionDto } from './create-transaction.dto';
-import { StatusEnum, TypeEnum } from 'src/base.entity';
+import { SourceEnum, StatusEnum, TypeEnum } from 'src/base.entity';
 
 export class UpdateTransactionDto extends PartialType(CreateTransactionDto) {}
 
@@ -18,6 +18,13 @@ export class UpdateTransactionResponseDto {
     description: 'The status of the transaction',
   })
   status: StatusEnum;
+
+  @ApiProperty({
+    required: false,
+    example: 'paystack',
+    description: 'The source of the transaction',
+  })
+  source: SourceEnum;
 
   @ApiProperty({
     required: false,

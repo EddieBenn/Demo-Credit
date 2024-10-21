@@ -5,13 +5,16 @@ import { Account } from './entities/account.entity';
 import { ModelClass } from 'objection';
 import { myTransaction } from 'src/utils/transaction';
 import { buildAccountFilter } from 'src/filters/query-filter';
-import { IReqUser } from 'src/base.entity';
+import { IReqUser, TypeEnum } from 'src/base.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AccountsService {
   constructor(
     @Inject('Account')
     private readonly accountModel: ModelClass<Account>,
+    @Inject('User')
+    private readonly userModel: ModelClass<User>,
   ) {}
 
   async createAccount(data: CreateAccountDto): Promise<CreateAccountDto> {
@@ -111,5 +114,39 @@ export class AccountsService {
 
   async deleteAccountByUserId(userId: string) {
     return await this.accountModel.query().delete().where('userId', userId);
+  }
+
+  async updateAccountBalance(
+    email: string,
+    amount: number,
+    operation: TypeEnum,
+  ) {
+    const user = await this.userModel
+      .query()
+      .findOne({ email })
+      .withGraphFetched('accounts');
+
+    if (!user) {
+      throw new HttpException(
+        `User with email: ${email} not found`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    if (user?.accounts?.length === 0) {
+      throw new HttpException(
+        'Account not found for this user',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const account = user.accounts[0];
+    const updatedBalance =
+      operation === TypeEnum.CREDIT
+        ? account.accountBalance + amount
+        : account.accountBalance - amount;
+
+    await this.accountModel.query().findById(account.id).update({
+      accountBalance: updatedBalance,
+    });
   }
 }

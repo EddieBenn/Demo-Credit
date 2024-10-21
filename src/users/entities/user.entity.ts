@@ -20,6 +20,8 @@ export class User extends BaseEntity {
   isVerified: boolean;
   demoId: string;
 
+  accounts?: Account[];
+
   async $beforeInsert() {
     this.id = uuidv4();
     this.firstName = this.firstName.toLowerCase();
