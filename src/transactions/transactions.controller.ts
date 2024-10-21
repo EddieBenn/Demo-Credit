@@ -14,6 +14,7 @@ import { TransactionsService } from './transactions.service';
 import {
   CreateTransactionDto,
   TransactionFilter,
+  UpdateTransactionStatusDto,
 } from './dto/create-transaction.dto';
 import {
   UpdateTransactionDto,
@@ -144,6 +145,28 @@ export class TransactionsController {
     const user = req?.user as IReqUser;
     try {
       return await this.transactionsService.deleteTransactionById(id, user);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @ApiOperation({ summary: 'Update Transaction Status' })
+  @ApiBody({ type: UpdateTransactionStatusDto })
+  @ApiOkResponse({ description: 'Transaction status successfully updated' })
+  @ApiNotFoundResponse({
+    description: 'User, account, or transaction not found',
+  })
+  @ApiBadRequestResponse()
+  @Put('status/update')
+  async updateTransactionStatus(@Body() body: UpdateTransactionStatusDto) {
+    const { email, amount, status, accountRole } = body;
+    try {
+      return await this.transactionsService.updateTransactionStatus(
+        email,
+        amount,
+        status,
+        accountRole,
+      );
     } catch (error) {
       throw error;
     }

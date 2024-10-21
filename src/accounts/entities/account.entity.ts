@@ -36,5 +36,13 @@ export class Account extends BaseEntity {
         to: 'transactions.senderAccountId',
       },
     },
+    receiverAccount: {
+      relation: Model.HasManyRelation,
+      modelClass: Transaction,
+      join: {
+        from: 'accounts.id',
+        to: 'transactions.receiverAccountId',
+      },
+    },
   };
 }

@@ -8,14 +8,17 @@ import { ModelClass } from 'objection';
 import { Transaction } from './entities/transaction.entity';
 import { myTransaction } from 'src/utils/transaction';
 import { buildTransactionFilter } from 'src/filters/query-filter';
-import { IReqUser } from 'src/base.entity';
+import { AccountRoleEnum, IReqUser, StatusEnum } from 'src/base.entity';
 import { PaginationResponseDto } from './dto/paginate.dto';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class TransactionsService {
   constructor(
     @Inject('Transaction')
     private readonly transactionModel: ModelClass<Transaction>,
+    @Inject('User')
+    private readonly userModel: ModelClass<User>,
   ) {}
 
   async createTransaction(
@@ -141,5 +144,43 @@ export class TransactionsService {
       );
     }
     await this.transactionModel.query().deleteById(id);
+  }
+
+  async updateTransactionStatus(
+    email: string,
+    amount: number,
+    status: StatusEnum,
+    accountRole: AccountRoleEnum,
+  ) {
+    const user = await this.userModel
+      .query()
+      .findOne({ email })
+      .withGraphFetched('accounts');
+
+    if (!user || user.accounts.length === 0) {
+      throw new HttpException(
+        'User or account not found',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    const account = user.accounts[0];
+
+    const accountKey =
+      accountRole === AccountRoleEnum.SENDER
+        ? 'senderAccountId'
+        : 'receiverAccountId';
+
+    const transaction = await this.transactionModel.query().findOne({
+      [accountKey]: account.id,
+      amount,
+      status: StatusEnum.PENDING,
+    });
+
+    if (!transaction) {
+      throw new HttpException('No pending transaction', HttpStatus.NOT_FOUND);
+    }
+    await this.transactionModel.query().findById(transaction.id).patch({
+      status,
+    });
   }
 }

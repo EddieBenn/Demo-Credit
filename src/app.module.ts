@@ -8,6 +8,7 @@ import { DatabaseModule } from './database.module';
 import { AccountsModule } from './accounts/accounts.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { UsersModule } from './users/users.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UsersModule } from './users/users.module';
     AccountsModule,
     TransactionsModule,
     UsersModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

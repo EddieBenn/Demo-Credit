@@ -29,10 +29,20 @@ export enum TypeEnum {
   DEBIT = 'debit',
 }
 
+export enum AccountRoleEnum {
+  SENDER = 'sender',
+  RECEIVER = 'receiver',
+}
+
 export enum StatusEnum {
   PENDING = 'pending',
   SUCCESSFUL = 'successful',
   FAILED = 'failed',
+}
+
+export enum SourceEnum {
+  PAYSTACK = 'paystack',
+  IN_APP = 'in_app',
 }
 
 export enum GenderEnum {
