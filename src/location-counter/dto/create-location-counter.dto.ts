@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { RolesEnum } from 'src/base.entity';
+import { RolesEnum } from '../../base.entity';
 
 export class CreateLocationCounterDto {
   @ApiProperty({ example: 'lagos', description: 'City name' })

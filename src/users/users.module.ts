@@ -1,10 +1,10 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import { LocationCounterModule } from 'src/location-counter/location-counter.module';
-import { AccountsModule } from 'src/accounts/accounts.module';
-import { FileUploadService } from 'src/utils/cloudinary';
-import { AuthModule } from 'src/auth/auth.module';
+import { LocationCounterModule } from '../location-counter/location-counter.module';
+import { AccountsModule } from '../accounts/accounts.module';
+import { FileUploadService } from '../utils/cloudinary';
+import { AuthModule } from '../auth/auth.module';
 import { MulterModule } from '@nestjs/platform-express';
 
 @Module({

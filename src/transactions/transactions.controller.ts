@@ -32,8 +32,8 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { PaginationResponseDto } from './dto/paginate.dto';
-import { ADMIN_ROLES, IReqUser } from 'src/base.entity';
-import { Roles } from 'src/auth/role.decorator';
+import { ADMIN_ROLES, IReqUser } from '../base.entity';
+import { Roles } from '../auth/role.decorator';
 @ApiTags('Transaction')
 @Controller('transactions')
 export class TransactionsController {

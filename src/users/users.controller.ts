@@ -37,12 +37,12 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { PaginationResponseDto } from './dto/paginate-user.dto';
-import { ADMIN_ROLES, IReqUser } from 'src/base.entity';
+import { ADMIN_ROLES, IReqUser } from '../base.entity';
 import { Roles } from 'src/auth/role.decorator';
 import { FileUploadService } from '../utils/cloudinary';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { SkipAuth } from 'src/auth/auth.decorator';
-import { PasswordMatch } from 'src/auth/password-match.pipe';
+import { SkipAuth } from '../auth/auth.decorator';
+import { PasswordMatch } from '../auth/password-match.pipe';
 import { Response } from 'express';
 
 @ApiTags('Users')

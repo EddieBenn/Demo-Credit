@@ -3,10 +3,10 @@ import { AccountFilter, CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { Account } from './entities/account.entity';
 import { ModelClass } from 'objection';
-import { myTransaction } from 'src/utils/transaction';
-import { buildAccountFilter } from 'src/filters/query-filter';
-import { IReqUser, TypeEnum } from 'src/base.entity';
-import { User } from 'src/users/entities/user.entity';
+import { myTransaction } from '../utils/transaction';
+import { buildAccountFilter } from '../filters/query-filter';
+import { IReqUser, TypeEnum } from '../base.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class AccountsService {

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateTransactionDto } from 'src/transactions/dto/create-transaction.dto';
+import { CreateTransactionDto } from '../../transactions/dto/create-transaction.dto';
 
 export class PaginationMetadataDto {
   @ApiProperty({ example: 100, description: 'The total number of users' })
