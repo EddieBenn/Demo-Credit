@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { LocationCounterModule } from 'src/location-counter/location-counter.module';
@@ -12,9 +12,9 @@ import { MulterModule } from '@nestjs/platform-express';
     MulterModule.register({
       dest: './users',
     }),
-    LocationCounterModule,
-    AccountsModule,
-    AuthModule,
+    forwardRef(() => LocationCounterModule),
+    forwardRef(() => AccountsModule),
+    forwardRef(() => AuthModule),
   ],
   controllers: [UsersController],
   providers: [UsersService, FileUploadService],

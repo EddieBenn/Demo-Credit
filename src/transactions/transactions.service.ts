@@ -8,14 +8,20 @@ import { ModelClass } from 'objection';
 import { Transaction } from './entities/transaction.entity';
 import { myTransaction } from 'src/utils/transaction';
 import { buildTransactionFilter } from 'src/filters/query-filter';
-import { IReqUser } from 'src/base.entity';
+import { AccountRoleEnum, IReqUser, StatusEnum } from 'src/base.entity';
 import { PaginationResponseDto } from './dto/paginate.dto';
+import { User } from 'src/users/entities/user.entity';
+import { Account } from 'src/accounts/entities/account.entity';
 
 @Injectable()
 export class TransactionsService {
   constructor(
     @Inject('Transaction')
     private readonly transactionModel: ModelClass<Transaction>,
+    @Inject('User')
+    private readonly userModel: ModelClass<User>,
+    @Inject('Account')
+    private readonly accountModel: ModelClass<Account>,
   ) {}
 
   async createTransaction(
@@ -117,10 +123,7 @@ export class TransactionsService {
   }
 
   async deleteTransactionById(id: string, user: IReqUser) {
-    const transaction = await this.transactionModel
-      .query()
-      .findById(id)
-      .withGraphFetched('senderAccount');
+    const transaction = await this.transactionModel.query().findById(id);
 
     if (!transaction) {
       throw new HttpException(
@@ -128,18 +131,66 @@ export class TransactionsService {
         HttpStatus.NOT_FOUND,
       );
     }
-    if (!transaction.senderAccount) {
+
+    const accountId = transaction?.senderAccountId
+      ? transaction.senderAccountId
+      : transaction.receiverAccountId;
+
+    if (!accountId) {
       throw new HttpException(
-        `Sender account for this transaction not found`,
+        `No account ID found for this transaction`,
         HttpStatus.NOT_FOUND,
       );
     }
-    if (user.role !== 'admin' && user.id !== transaction.senderAccount.userId) {
+    const account = await this.accountModel.query().findOne({ id: accountId });
+
+    if (user?.role !== 'admin' && user?.id !== account?.userId) {
       throw new HttpException(
         "Unauthorized: You cannot delete another user's transaction",
         HttpStatus.UNAUTHORIZED,
       );
     }
     await this.transactionModel.query().deleteById(id);
+  }
+
+  async updateTransactionStatus(
+    email: string,
+    amount: number,
+    status: StatusEnum,
+    accountRole: AccountRoleEnum,
+  ) {
+    const user = await this.userModel.query().findOne({ email });
+
+    if (!user?.id) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    const account = await this.accountModel
+      .query()
+      .findOne({ userId: user.id });
+
+    if (!account?.id) {
+      throw new HttpException(
+        'User does not have an account',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const accountKey =
+      accountRole === AccountRoleEnum.SENDER
+        ? 'senderAccountId'
+        : 'receiverAccountId';
+
+    const transaction = await this.transactionModel.query().findOne({
+      [accountKey]: account.id,
+      amount,
+      status: StatusEnum.PENDING,
+    });
+
+    if (!transaction) {
+      throw new HttpException('No pending transaction', HttpStatus.NOT_FOUND);
+    }
+    await this.transactionModel.query().findById(transaction.id).patch({
+      status,
+    });
   }
 }

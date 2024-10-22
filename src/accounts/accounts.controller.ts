@@ -11,7 +11,11 @@ import {
   Req,
 } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
-import { AccountFilter, CreateAccountDto } from './dto/create-account.dto';
+import {
+  AccountFilter,
+  CreateAccountDto,
+  UpdateBalanceDto,
+} from './dto/create-account.dto';
 import {
   UpdateAccountDto,
   UpdateAccountResponseDto,
@@ -136,6 +140,25 @@ export class AccountsController {
     const user = req?.user as IReqUser;
     try {
       return await this.accountsService.deleteAccountById(id, user);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @ApiOperation({ summary: 'Update account balance by email' })
+  @ApiOkResponse({ description: 'Account balance successfully updated' })
+  @ApiNotFoundResponse({ description: 'User or account not found' })
+  @ApiBadRequestResponse({ description: 'Invalid balance update operation' })
+  @ApiSecurity('access_token')
+  @Put('balance/update')
+  async updateAccountBalance(@Body() updateBalanceDto: UpdateBalanceDto) {
+    const { email, amount, operation } = updateBalanceDto;
+    try {
+      return await this.accountsService.updateAccountBalance(
+        email,
+        amount,
+        operation,
+      );
     } catch (error) {
       throw error;
     }
