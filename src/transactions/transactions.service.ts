@@ -6,12 +6,12 @@ import {
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { ModelClass } from 'objection';
 import { Transaction } from './entities/transaction.entity';
-import { myTransaction } from 'src/utils/transaction';
-import { buildTransactionFilter } from 'src/filters/query-filter';
-import { AccountRoleEnum, IReqUser, StatusEnum } from 'src/base.entity';
+import { myTransaction } from '../utils/transaction';
+import { buildTransactionFilter } from '../filters/query-filter';
+import { AccountRoleEnum, IReqUser, StatusEnum } from '../base.entity';
 import { PaginationResponseDto } from './dto/paginate.dto';
-import { User } from 'src/users/entities/user.entity';
-import { Account } from 'src/accounts/entities/account.entity';
+import { User } from '../users/entities/user.entity';
+import { Account } from '../accounts/entities/account.entity';
 
 @Injectable()
 export class TransactionsService {

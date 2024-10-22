@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { BaseEntity, GenderEnum, RolesEnum } from '../../base.entity';
 import { Model } from 'objection';
-import { Account } from 'src/accounts/entities/account.entity';
+import { Account } from '../../accounts/entities/account.entity';
 
 export class User extends BaseEntity {
   static tableName = 'users';

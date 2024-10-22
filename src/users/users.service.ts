@@ -17,18 +17,18 @@ import {
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { ModelClass } from 'objection';
-import { LocationCounterService } from 'src/location-counter/location-counter.service';
-import { UtilService } from 'src/utils/utility-service';
-import { myTransaction } from 'src/utils/transaction';
-import { sendMail } from 'src/utils/nodemailer';
+import { LocationCounterService } from '../location-counter/location-counter.service';
+import { UtilService } from '../utils/utility-service';
+import { myTransaction } from '../utils/transaction';
+import { sendMail } from '../utils/nodemailer';
 import { IReqUser, RolesEnum } from '../base.entity';
-import { buildUserFilter } from 'src/filters/query-filter';
-import { CreateAccountDto } from 'src/accounts/dto/create-account.dto';
-import { AccountsService } from 'src/accounts/accounts.service';
+import { buildUserFilter } from '../filters/query-filter';
+import { CreateAccountDto } from '../accounts/dto/create-account.dto';
+import { AccountsService } from '../accounts/accounts.service';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import moment from 'moment';
-import { AuthService } from 'src/auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class UsersService {
@@ -46,6 +46,15 @@ export class UsersService {
     user?: IReqUser,
   ): Promise<CreateUserDto> {
     const { email, phoneNumber, role } = data;
+
+    // const karmaCheck = await checkKarmaList(email);
+    // if (karmaCheck?.data?.karma_identity) {
+    //   throw new HttpException(
+    //     `User with email ${email} is on the Karma blacklist for ${karmaCheck?.data?.karma_type?.karma}`,
+    //     HttpStatus.UNPROCESSABLE_ENTITY,
+    //   );
+    // }
+
     const userDetailsExist = await this.userModel
       .query()
       .where((builder) => {

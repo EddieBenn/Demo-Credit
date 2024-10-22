@@ -1,18 +1,18 @@
 import { Injectable, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
-import { AccountsService } from 'src/accounts/accounts.service';
+import { AccountsService } from '../accounts/accounts.service';
 import {
   AccountRoleEnum,
   SourceEnum,
   StatusEnum,
   TypeEnum,
-} from 'src/base.entity';
+} from '../base.entity';
 import { ModelClass } from 'objection';
-import { Transaction } from 'src/transactions/entities/transaction.entity';
-import { User } from 'src/users/entities/user.entity';
-import { TransactionsService } from 'src/transactions/transactions.service';
-import { Account } from 'src/accounts/entities/account.entity';
+import { Transaction } from '../transactions/entities/transaction.entity';
+import { User } from '../users/entities/user.entity';
+import { TransactionsService } from '../transactions/transactions.service';
+import { Account } from '../accounts/entities/account.entity';
 
 @Injectable()
 export class PaymentsService {
@@ -346,7 +346,7 @@ export class PaymentsService {
 
     if (!senderAccount) {
       throw new HttpException(
-        'You account number is not correct',
+        'Your account number is not correct',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -357,18 +357,31 @@ export class PaymentsService {
       );
     }
 
-    if (senderAccount.accountBalance < amount) {
+    const senderAccountBalanceKobo = Math.round(
+      senderAccount.accountBalance * 100,
+    );
+    const amountKobo = Math.round(amount * 100);
+
+    if (senderAccountBalanceKobo < amountKobo) {
       throw new HttpException('Insufficient funds', HttpStatus.BAD_REQUEST);
     }
 
     try {
       await this.accountModel.transaction(async (trx) => {
-        senderAccount.accountBalance -= amount;
+        const newSenderBalance = (senderAccountBalanceKobo - amountKobo) / 100;
+        senderAccount.accountBalance = newSenderBalance;
+
         await this.accountModel.query(trx).patchAndFetchById(senderAccount.id, {
           accountBalance: senderAccount.accountBalance,
         });
 
-        receiverAccount.accountBalance += amount;
+        const receiverAccountBalanceKobo = Math.round(
+          receiverAccount.accountBalance * 100,
+        );
+        const newReceiverBalance =
+          (receiverAccountBalanceKobo + amountKobo) / 100;
+        receiverAccount.accountBalance = newReceiverBalance;
+
         await this.accountModel
           .query(trx)
           .patchAndFetchById(receiverAccount.id, {

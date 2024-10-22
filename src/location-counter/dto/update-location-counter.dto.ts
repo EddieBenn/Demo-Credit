@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateLocationCounterDto } from './create-location-counter.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { RolesEnum } from 'src/base.entity';
+import { RolesEnum } from '../../base.entity';
 
 export class UpdateLocationCounterDto extends PartialType(
   CreateLocationCounterDto,

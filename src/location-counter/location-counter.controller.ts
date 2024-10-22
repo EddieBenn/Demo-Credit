@@ -29,8 +29,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { PaginationResponseDto } from './dto/paginate.dto';
-import { ADMIN_ROLES } from 'src/base.entity';
-import { Roles } from 'src/auth/role.decorator';
+import { ADMIN_ROLES } from '../base.entity';
+import { Roles } from '../auth/role.decorator';
 
 @ApiTags('Location Counter')
 @Roles(ADMIN_ROLES.ADMIN)

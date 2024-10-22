@@ -14,7 +14,7 @@ import {
   SourceEnum,
   StatusEnum,
   TypeEnum,
-} from 'src/base.entity';
+} from '../../base.entity';
 
 export class CreateTransactionDto {
   @ApiProperty({
