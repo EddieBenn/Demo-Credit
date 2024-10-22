@@ -26,7 +26,7 @@ export class CreatePaymentDto {
 export class CreateTransferRecipientDto {
   @ApiProperty({
     required: true,
-    example: '0331173993',
+    example: '0001234567',
     description: 'Account number',
   })
   @IsNotEmpty()
@@ -35,7 +35,7 @@ export class CreateTransferRecipientDto {
 
   @ApiProperty({
     required: true,
-    example: '038',
+    example: '058',
     description: 'Bank code',
   })
   @IsNotEmpty()
@@ -137,4 +137,42 @@ export class TransferFundsDto {
   @IsNotEmpty()
   @IsNumber()
   amount: number;
+}
+
+export class CreateCustomerDto {
+  @ApiProperty({
+    required: true,
+    example: 'johndoe@gmail.com',
+    description: 'Email of customer',
+  })
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+
+  @ApiProperty({
+    required: true,
+    example: 'John',
+    description: 'First name of customer',
+  })
+  @IsNotEmpty()
+  @IsString()
+  firstName: string;
+
+  @ApiProperty({
+    required: true,
+    example: 'Doe',
+    description: 'Last name of customer',
+  })
+  @IsNotEmpty()
+  @IsString()
+  lastName: string;
+
+  @ApiProperty({
+    required: true,
+    example: '08052795012',
+    description: 'Phone number of customer',
+  })
+  @IsNotEmpty()
+  @IsString()
+  phoneNumber: string;
 }

@@ -1,8 +1,9 @@
-import { Controller, Post, Body, Param, Res } from '@nestjs/common';
+import { Controller, Post, Body, Param, Res, Get } from '@nestjs/common';
 import { Response } from 'express';
 import { PaymentsService } from './payments.service';
 import {
   ConfirmTransferDto,
+  CreateCustomerDto,
   CreatePaymentDto,
   CreateTransferRecipientDto,
   InitiateTransferDto,
@@ -158,6 +159,74 @@ export class PaymentsController {
         receiverAccountNumber,
         amount,
       );
+      return res.status(200).json(result);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @ApiOperation({ summary: 'List Customers on Paystack' })
+  @ApiUnprocessableEntityResponse()
+  @ApiSecurity('access_token')
+  @Get('customers/paystack')
+  async listCustomersPaystack(@Res() res: Response) {
+    try {
+      const result = await this.paymentsService.listCustomersPaystack();
+      return res.status(200).json(result);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @ApiOperation({ summary: 'Get One Customer on Paystack' })
+  @ApiUnprocessableEntityResponse()
+  @ApiSecurity('access_token')
+  @Post('customer/get-one/:email')
+  async fetchOneCustomerPaystack(
+    @Param('email') email: string,
+    @Res() res: Response,
+  ) {
+    try {
+      const result = await this.paymentsService.fetchOneCustomerPaystack(email);
+      return res.status(200).json(result);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @ApiOperation({ summary: 'Create Customer on Paystack' })
+  @ApiUnprocessableEntityResponse()
+  @ApiSecurity('access_token')
+  @Post('create-customer/paystack')
+  async createCustomerPaystack(
+    @Body() body: CreateCustomerDto,
+    @Res() res: Response,
+  ) {
+    const { email, firstName, lastName, phoneNumber } = body;
+    try {
+      const recipient = await this.paymentsService.createCustomerPaystack(
+        email,
+        firstName,
+        lastName,
+        phoneNumber,
+      );
+      return res.status(200).json(recipient);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @ApiOperation({ summary: 'Create Dedicated Virtual Account on Paystack' })
+  @ApiUnprocessableEntityResponse()
+  @ApiSecurity('access_token')
+  @Post('create/virtual-account/:customerCode')
+  async createDedicatedVirtualAccount(
+    @Param('customerCode') customerCode: string,
+    @Res() res: Response,
+  ) {
+    try {
+      const result =
+        await this.paymentsService.createDedicatedVirtualAccount(customerCode);
       return res.status(200).json(result);
     } catch (error) {
       throw error;

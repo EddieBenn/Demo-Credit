@@ -121,29 +121,29 @@ export class AccountsService {
     amount: number,
     operation: TypeEnum,
   ) {
-    const user = await this.userModel
-      .query()
-      .findOne({ email })
-      .withGraphFetched('accounts');
+    const user = await this.userModel.query().findOne({ email });
 
-    if (!user) {
+    if (!user?.id) {
       throw new HttpException(
         `User with email: ${email} not found`,
         HttpStatus.NOT_FOUND,
       );
     }
-    if (user?.accounts?.length === 0) {
+
+    const account = await this.accountModel
+      .query()
+      .findOne({ userId: user.id });
+    if (!account?.id) {
       throw new HttpException(
         'Account not found for this user',
         HttpStatus.NOT_FOUND,
       );
     }
 
-    const account = user.accounts[0];
     const updatedBalance =
       operation === TypeEnum.CREDIT
-        ? account.accountBalance + amount
-        : account.accountBalance - amount;
+        ? (account.accountBalance * 100 + amount * 100) / 100
+        : (account.accountBalance * 100 - amount * 100) / 100;
 
     await this.accountModel.query().findById(account.id).update({
       accountBalance: updatedBalance,
