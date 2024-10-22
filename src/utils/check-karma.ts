@@ -16,6 +16,7 @@ export const checkKarmaList = async (email: string) => {
     const response = await axios.get(url, { headers });
     return response.data;
   } catch (error) {
+    console.log(error);
     throw new Error(
       error.response?.data?.message || 'Error checking Karma list',
     );
