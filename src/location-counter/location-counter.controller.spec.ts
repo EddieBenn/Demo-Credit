@@ -150,7 +150,7 @@ describe('LocationCounterController', () => {
   describe('getLocationCounterById', () => {
     const location_id = '6d1d9844-95c4-453c-abad-2e5b0fd50db6';
 
-    it('should get languages', async () => {
+    it('should get one location counter', async () => {
       const locationCounter = new CreateLocationCounterDto();
       jest
         .spyOn(service, 'getLocationCounterById')
