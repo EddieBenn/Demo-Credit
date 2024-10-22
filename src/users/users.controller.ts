@@ -36,7 +36,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { PaginationResponseDto } from './dto/paginate.dto';
+import { PaginationResponseDto } from './dto/paginate-user.dto';
 import { ADMIN_ROLES, IReqUser } from 'src/base.entity';
 import { Roles } from 'src/auth/role.decorator';
 import { FileUploadService } from '../utils/cloudinary';

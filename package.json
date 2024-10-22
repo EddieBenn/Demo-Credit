@@ -47,6 +47,7 @@
     "otp-generator": "^4.0.1",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "paystack": "^2.0.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "uuid": "^10.0.0"

@@ -11,6 +11,7 @@ import { buildTransactionFilter } from 'src/filters/query-filter';
 import { AccountRoleEnum, IReqUser, StatusEnum } from 'src/base.entity';
 import { PaginationResponseDto } from './dto/paginate.dto';
 import { User } from 'src/users/entities/user.entity';
+import { Account } from 'src/accounts/entities/account.entity';
 
 @Injectable()
 export class TransactionsService {
@@ -19,6 +20,8 @@ export class TransactionsService {
     private readonly transactionModel: ModelClass<Transaction>,
     @Inject('User')
     private readonly userModel: ModelClass<User>,
+    @Inject('Account')
+    private readonly accountModel: ModelClass<Account>,
   ) {}
 
   async createTransaction(
@@ -120,10 +123,7 @@ export class TransactionsService {
   }
 
   async deleteTransactionById(id: string, user: IReqUser) {
-    const transaction = await this.transactionModel
-      .query()
-      .findById(id)
-      .withGraphFetched('senderAccount');
+    const transaction = await this.transactionModel.query().findById(id);
 
     if (!transaction) {
       throw new HttpException(
@@ -131,13 +131,20 @@ export class TransactionsService {
         HttpStatus.NOT_FOUND,
       );
     }
-    if (!transaction.senderAccount) {
+
+    const accountId = transaction?.senderAccountId
+      ? transaction.senderAccountId
+      : transaction.receiverAccountId;
+
+    if (!accountId) {
       throw new HttpException(
-        `Sender account for this transaction not found`,
+        `No account ID found for this transaction`,
         HttpStatus.NOT_FOUND,
       );
     }
-    if (user.role !== 'admin' && user.id !== transaction.senderAccount.userId) {
+    const account = await this.accountModel.query().findOne({ id: accountId });
+
+    if (user?.role !== 'admin' && user?.id !== account?.userId) {
       throw new HttpException(
         "Unauthorized: You cannot delete another user's transaction",
         HttpStatus.UNAUTHORIZED,
@@ -152,18 +159,21 @@ export class TransactionsService {
     status: StatusEnum,
     accountRole: AccountRoleEnum,
   ) {
-    const user = await this.userModel
-      .query()
-      .findOne({ email })
-      .withGraphFetched('accounts');
+    const user = await this.userModel.query().findOne({ email });
 
-    if (!user || user.accounts.length === 0) {
+    if (!user?.id) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    const account = await this.accountModel
+      .query()
+      .findOne({ userId: user.id });
+
+    if (!account?.id) {
       throw new HttpException(
-        'User or account not found',
+        'User does not have an account',
         HttpStatus.NOT_FOUND,
       );
     }
-    const account = user.accounts[0];
 
     const accountKey =
       accountRole === AccountRoleEnum.SENDER

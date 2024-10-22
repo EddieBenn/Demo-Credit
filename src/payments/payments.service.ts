@@ -38,9 +38,11 @@ export class PaymentsService {
       'Content-Type': 'application/json',
     };
 
+    //Convert amount to kobo for Paystack
     const data = {
       email,
-      amount: amount * 100,
+      amount: Math.round(Number(amount) * 100).toString(),
+      currency: 'NGN',
     };
 
     try {
@@ -49,11 +51,11 @@ export class PaymentsService {
         data,
         { headers },
       );
-      const user = await this.userModel
+      const user = await this.userModel.query().findOne({ email });
+      const account = await this.accountModel
         .query()
-        .findOne({ email })
-        .withGraphFetched('accounts');
-      const account = user?.accounts[0];
+        .findOne({ userId: user.id });
+
       await this.transactionModel.query().insert({
         type: TypeEnum.CREDIT,
         status: StatusEnum.PENDING,
@@ -84,6 +86,7 @@ export class PaymentsService {
         `https://api.paystack.co/transaction/verify/${reference}`,
         { headers },
       );
+
       if (response.data.data.status === 'success') {
         const { email } = response.data.data.customer;
         const { amount } = response.data.data;
@@ -236,11 +239,10 @@ export class PaymentsService {
         data,
         { headers },
       );
-      const user = await this.userModel
+      const user = await this.userModel.query().findOne({ email });
+      const account = await this.accountModel
         .query()
-        .findOne({ email })
-        .withGraphFetched('accounts');
-      const account = user?.accounts[0];
+        .findOne({ userId: user.id });
       await this.transactionModel.query().insert({
         type: TypeEnum.DEBIT,
         status: StatusEnum.PENDING,
@@ -403,6 +405,105 @@ export class PaymentsService {
       throw new HttpException(
         'Error processing transfer',
         HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async listCustomersPaystack() {
+    const headers = {
+      Authorization: `Bearer ${this.secretKey}`,
+      'Content-Type': 'application/json',
+    };
+
+    try {
+      const response = await axios.get('https://api.paystack.co/customer', {
+        headers,
+      });
+      return response.data;
+    } catch (error) {
+      throw new HttpException(
+        error.response?.data?.message || 'Failed to load customers',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+  }
+
+  async fetchOneCustomerPaystack(email: string) {
+    const headers = {
+      Authorization: `Bearer ${this.secretKey}`,
+      'Content-Type': 'application/json',
+    };
+
+    try {
+      const response = await axios.get(
+        `https://api.paystack.co/customer/${email}`,
+        { headers },
+      );
+
+      return response.data;
+    } catch (error) {
+      throw new HttpException(
+        error.response?.data?.message || 'Failed to fetch customer',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+  }
+
+  async createCustomerPaystack(
+    email: string,
+    firstName: string,
+    lastName: string,
+    phoneNumber: string,
+  ) {
+    const headers = {
+      Authorization: `Bearer ${this.secretKey}`,
+      'Content-Type': 'application/json',
+    };
+
+    const data = {
+      email,
+      first_name: firstName,
+      last_name: lastName,
+      phone: phoneNumber,
+    };
+
+    try {
+      const response = await axios.post(
+        'https://api.paystack.co/customer',
+        data,
+        { headers },
+      );
+      return response.data;
+    } catch (error) {
+      throw new HttpException(
+        error.response?.data?.message || 'Failed to create customer',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+  }
+
+  async createDedicatedVirtualAccount(customerCode: string) {
+    const headers = {
+      Authorization: `Bearer ${this.secretKey}`,
+      'Content-Type': 'application/json',
+    };
+
+    const data = {
+      customer: customerCode,
+    };
+
+    try {
+      const response = await axios.post(
+        'https://api.paystack.co/dedicated_account',
+        data,
+        { headers },
+      );
+      return response.data;
+    } catch (error) {
+      throw new HttpException(
+        error.response?.data?.message ||
+          'Failed to create dedicated virtual account',
+        HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
   }
