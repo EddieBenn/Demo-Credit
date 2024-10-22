@@ -29,6 +29,7 @@ import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import moment from 'moment';
 import { AuthService } from 'src/auth/auth.service';
+import { checkKarmaList } from 'src/utils/check-karma';
 
 @Injectable()
 export class UsersService {
@@ -46,6 +47,15 @@ export class UsersService {
     user?: IReqUser,
   ): Promise<CreateUserDto> {
     const { email, phoneNumber, role } = data;
+
+    const karmaCheck = await checkKarmaList(email);
+    if (karmaCheck?.data?.karma_identity) {
+      throw new HttpException(
+        `User with email ${email} is on the Karma blacklist for ${karmaCheck?.data?.karma_type?.karma}`,
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+
     const userDetailsExist = await this.userModel
       .query()
       .where((builder) => {
