@@ -9,7 +9,7 @@ import {
   IsUUID,
   MinLength,
 } from 'class-validator';
-import { TypeEnum } from 'src/base.entity';
+import { TypeEnum } from '../../base.entity';
 
 export class CreateAccountDto {
   @ApiProperty({

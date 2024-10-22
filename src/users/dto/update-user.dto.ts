@@ -1,6 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreateUserDto } from './create-user.dto';
-import { GenderEnum } from 'src/base.entity';
+import { GenderEnum } from '../../base.entity';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {}
 

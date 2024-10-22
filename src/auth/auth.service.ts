@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { IReqUser } from 'src/base.entity';
+import { IReqUser } from '../base.entity';
 
 @Injectable()
 export class AuthService {

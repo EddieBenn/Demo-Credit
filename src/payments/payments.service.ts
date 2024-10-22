@@ -1,18 +1,18 @@
 import { Injectable, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
-import { AccountsService } from 'src/accounts/accounts.service';
+import { AccountsService } from '../accounts/accounts.service';
 import {
   AccountRoleEnum,
   SourceEnum,
   StatusEnum,
   TypeEnum,
-} from 'src/base.entity';
+} from '../base.entity';
 import { ModelClass } from 'objection';
-import { Transaction } from 'src/transactions/entities/transaction.entity';
-import { User } from 'src/users/entities/user.entity';
-import { TransactionsService } from 'src/transactions/transactions.service';
-import { Account } from 'src/accounts/entities/account.entity';
+import { Transaction } from '../transactions/entities/transaction.entity';
+import { User } from '../users/entities/user.entity';
+import { TransactionsService } from '../transactions/transactions.service';
+import { Account } from '../accounts/entities/account.entity';
 
 @Injectable()
 export class PaymentsService {

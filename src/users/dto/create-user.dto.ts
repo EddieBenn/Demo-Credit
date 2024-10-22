@@ -9,7 +9,7 @@ import {
   Matches,
   MinLength,
 } from 'class-validator';
-import { GenderEnum, RolesEnum } from 'src/base.entity';
+import { GenderEnum, RolesEnum } from '../../base.entity';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'John', description: 'First name of the user' })

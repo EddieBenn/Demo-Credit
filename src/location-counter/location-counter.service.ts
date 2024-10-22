@@ -6,9 +6,9 @@ import {
 import { UpdateLocationCounterDto } from './dto/update-location-counter.dto';
 import { LocationCounter } from './entities/location-counter.entity';
 import { buildLocationCounterFilter } from '../filters/query-filter';
-import { RolesEnum } from 'src/base.entity';
+import { RolesEnum } from '../base.entity';
 import { ModelClass } from 'objection';
-import { myTransaction } from 'src/utils/transaction';
+import { myTransaction } from '../utils/transaction';
 
 @Injectable()
 export class LocationCounterService {
