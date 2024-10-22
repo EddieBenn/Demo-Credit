@@ -117,7 +117,7 @@ export class TransferFundsDto {
     description: 'Sender account number',
   })
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   senderAccountNumber: string;
 
   @ApiProperty({
