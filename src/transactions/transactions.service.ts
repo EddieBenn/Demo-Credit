@@ -189,8 +189,12 @@ export class TransactionsService {
     if (!transaction) {
       throw new HttpException('No pending transaction', HttpStatus.NOT_FOUND);
     }
-    await this.transactionModel.query().findById(transaction.id).patch({
-      status,
-    });
+    await this.transactionModel
+      .query()
+      .findById(transaction.id)
+      .patch({
+        status,
+      })
+      .returning('*');
   }
 }

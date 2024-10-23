@@ -33,7 +33,7 @@ import {
 } from '@nestjs/swagger';
 import { PaginationResponseDto } from './dto/paginate.dto';
 import { ADMIN_ROLES, IReqUser } from '../base.entity';
-import { Roles } from 'src/auth/role.decorator';
+import { Roles } from '../auth/role.decorator';
 
 @ApiTags('Account')
 @Controller('accounts')
