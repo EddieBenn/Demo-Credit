@@ -18,8 +18,8 @@ API Routes<br />
 User Routes<br />
 Account Routes<br />
 Transaction Routes<br />
-Paystack Routes<br />
-Paystack Routes<br />
+Location Counter Routes<br />
+Payment Routes<br />
 Technologies Used<br />
 
 
@@ -148,6 +148,82 @@ Only admins can access these routes, and all require authentication
 
 <table> <thead> <tr> <th>HTTP Method</th> <th>Endpoint</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td>POST</td> <td>/location-counter</td> <td>Create a location counter</td> </tr> <tr> <td>GET</td> <td>/location-counter</td> <td>Get all location counters</td> </tr> <tr> <td>GET</td> <td>/location-counter/</td> <td>Get one location counter</td> </tr> <tr> <td>PUT</td> <td>/location-counter/</td> <td>Update a location counter</td> </tr> <tr> <td>DELETE</td> <td>/location-counter/</td> <td>Delete a location counter</td> </tr> </tbody> </table>
 
+
+#### Payment Routes
+All the routes in this module require authentication
+
+
+<table>
+  <thead>
+    <tr>
+      <th>HTTP Method</th>
+      <th>Endpoint</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>POST</td>
+      <td>/payments/initialize/paystack</td>
+      <td>Initiate a transaction</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/payments/verify/:reference</td>
+      <td>Verify a transaction</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/payments/webhook/paystack</td>
+      <td>Fulfil payment webhook</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/payments/transfer-recipient/paystack</td>
+      <td>Initiate a transfer recipient</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/payments/initiate-transfer/paystack</td>
+      <td>Initiate a transfer</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/payments/confirm-transfer</td>
+      <td>Confirm a transfer</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/payments/verify-transfer/:reference</td>
+      <td>Verify a transfer</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/payments/transfer</td>
+      <td>In-app transfer to another user</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>/payments/customers/paystack</td>
+      <td>Get customer list on Paystack</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/payments/customer/get-one/:email</td>
+      <td>Get one customer on Paystack</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/payments/create-customer/paystack</td>
+      <td>Create customer on Paystack</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/payments/create/virtual-account/:customerCode</td>
+      <td>Create dedicated virtual account on Paystack</td>
+    </tr>
+  </tbody>
+</table>
 
 
 ## Technologies Used
