@@ -1,6 +1,6 @@
 # Demo Credit
 
-[https://demo-credit-vv4q.onrender.com](https://edidiong-ndaobong-lendsqr-be-test.onrender.com)
+[Demo-Credit-Url](https://edidiong-ndaobong-lendsqr-be-test.onrender.com)
 
 ## Project Overview
 Demo Credit is a RESTful API built using **Node.js**, **NestJS**, **Knex.js**, and **Objection.js** for managing a fintech platform. The API allows users to register, create accounts, fund accounts via Paystack API, withdraw from accounts, and transfer funds to other users. It also includes an authentication module (JWT) for managing user authentication and authorization. The backend integrates image uploading via Cloudinary during customer creation and supports basic CRUD operations for users, accounts, transactions, and location counters. Swagger is integrated for easy API testing. Add `/documentationView` to the base URL to access the Swagger documentation.
