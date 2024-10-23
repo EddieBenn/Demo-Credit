@@ -138,7 +138,7 @@ export class TransactionsController {
   @ApiBadRequestResponse()
   @ApiSecurity('access_token')
   @Delete(':id')
-  async deleteAccountById(
+  async deleteTransactionById(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Req() req: any,
   ) {
