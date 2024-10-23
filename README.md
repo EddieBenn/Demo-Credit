@@ -11,70 +11,87 @@ Demo Credit is a RESTful API built using **Node.js**, **NestJS**, **Knex.js**, a
 - **Profile Management**: View and update user profiles.
 
 ## Table of Contents
-1. [Installation](#installation)
-2. [Environment Variables](#environment-variables)
-3. [Project Structure](#project-structure)
-4. [API Routes](#api-routes)
-    - [User Routes](#user-routes)
-    - [Account Routes](#account-routes)
-    - [Transaction Routes](#transaction-routes)
-    - [Location Counter Routes](#location-counter-routes)
-5. [Technologies Used](#technologies-used)
+[Installation](#installation)
+[Environment Variables](#environment-variables)
+[Project Structure](#project-structure)
+[API Routes](#api-routes)
+   - [User Routes](#user-routes)
+   - [Account Routes](#account-routes)
+   - [Transaction Routes](#transaction-routes)
+   - [Location Counter Routes](#location-counter-routes)
+[Technologies Used](#technologies-used)
+
 
 ## Installation
 To install and run the project locally:
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/EddieBenn/Demo-Credit.git
-Navigate into the project directory:
-bash
-Copy code
+#### Clone the repository:
+
+``` 
+git clone https://github.com/EddieBenn/Demo-Credit.git
+```
+#### Navigate into the project directory:
+
+```
 cd Demo-Credit
-Install dependencies:
-bash
-Copy code
+```
+
+#### Install dependencies:
+
+```
 npm install
-Create a .env file in the root directory and add the necessary environment variables (see the Environment Variables section).
-Build the project:
-bash
-Copy code
+```
+
+#### Create a .env file in the root directory and add the necessary environment variables (see the Environment Variables section).
+
+
+#### Build the project
+
+```
 npm run build
-Start the development server:
-bash
-Copy code
+```
+
+
+#### Start the development server:
+
+```
 npm run start
-Environment Variables
+```
+
+# Environment Variables
 Create a .env file in the root directory with the following variables:
 
-bash
-Copy code
+```
 # DEVELOPMENT KEYS
-PORT=YOUR_PORT
-JWT_SECRET=YOUR_JWT_SECRET
-JWT_EXPIRY=YOUR_JWT_EXPIRY
-PAYSTACK_SECRET_KEY=YOUR_PAYSTACK_SECRET_KEY
-ADJUTOR_SECRET_KEY=YOUR_ADJUTOR_SECRET_KEY
-ADJUTOR_KARMA_URL=YOUR_ADJUTOR_KARMA_URL
+PORT = YOUR PORT
+JWT_SECRET = YOUR JWT_SECRET
+JWT_EXPIRY = YOUR JWT_EXPIRY
+PAYSTACK_SECRET_KEY = YOUR PAYSTACK_SECRET_KEY
+ADJUTOR_SECRET_KEY = YOUR ADJUTOR_SECRET_KEY
+ADJUTOR_KARMA_URL = YOUR ADJUTOR_KARMA_URL
 
 # CLOUDINARY KEYS
-CLOUDINARY_NAME=YOUR_CLOUDINARY_NAME
-API_KEY=YOUR_API_KEY
-API_SECRET=YOUR_API_SECRET
+CLOUDINARY_NAME = YOUR CLOUDINARY_NAME
+API_KEY = YOUR API_KEY
+API_SECRET = YOUR API_SECRET
 
 # DATABASE KEYS
-PROD_PORT=YOUR_PROD_PORT
-PROD_DB_NAME=YOUR_PROD_DB_NAME
-PROD_DB_USERNAME=YOUR_PROD_DB_USERNAME
-PROD_DB_PASSWORD=YOUR_PROD_DB_PASSWORD
-PROD_DB_HOST=YOUR_PROD_DB_HOST
+PROD_PORT = YOUR PROD_PORT
+PROD_DB_NAME = YOUR PROD_DB_NAME
+PROD_DB_USERNAME = YOUR PROD_DB_USERNAME
+PROD_DB_PASSWORD = YOUR PROD_DB_PASSWORD
+PROD_DB_HOST = YOUR PROD_DB_HOST
 
 # GMAIL SMTP KEYS FOR MAILS
-GMAIL_USER=YOUR_GMAIL_USER
-GMAIL_PASSWORD=YOUR_GMAIL_PASSWORD
-Project Structure
-bash
-Copy code
+GMAIL_USER = YOUR GMAIL_USER
+GMAIL_PASSWORD = YOUR GMAIL_PASSWORD
+APP_BASE_URL = YOUR APP_BASE_URL
+```
+
+
+# Project Structure
+
+```
 ├── migrations
 ├── src
 │   ├── accounts
@@ -102,75 +119,82 @@ Copy code
 ├── README.md
 ├── tsconfig.json
 └── tsconfig.build.json
-API Routes
-User Routes
-HTTP Method	Endpoint	Description
-POST	/users/	Register a new user (requires profile image)
-POST	/users/verify-otp	Verify user email using OTP
-POST	/users/login	Log in a user
-GET	/users/
-Get details of a user (requires auth and user_id)
-GET	/users	Get all users (requires auth)
-PUT	/users/
-Update a user (requires auth and user_id)
-DELETE	/users/
-Delete a user (requires auth and user_id; admin-only for others)
-POST	/users/forgot-password	Reset the password of a user
-Account Routes
-All routes in this module require authentication.
+```
 
-HTTP Method	Endpoint	Description
-POST	/accounts	Create a new account
-GET	/accounts	Get all accounts (admin-only)
-GET	/accounts/
-Get one account
-GET	/accounts/user/
-Get an account by user_id
-PUT	/accounts/
-Update account
-DELETE	/accounts/
-Delete an account
-Transaction Routes
-All routes in this module require authentication.
 
-HTTP Method	Endpoint	Description
-POST	/transactions	Create a new transaction
-GET	/transactions	Get all transactions (admin-only)
-GET	/transactions/
-Get one transaction
-GET	/transactions/account/
-Get transactions by account_id
-PUT	/transactions/
-Update transaction
-PUT	/transactions/status/update	Update transaction status
-DELETE	/transactions/
-Delete a transaction
-Location Counter Routes
-Only admins can access these routes, and all require authentication.
+## API Routes
+#### User Routes
 
-HTTP Method	Endpoint	Description
-POST	/location-counter	Create a location counter
-GET	/location-counter	Get all location counters
-GET	/location-counter/
-Get one location counter
-PUT	/location-counter/
-Update a location counter
-DELETE	/location-counter/
-Delete a location counter
-Technologies Used
+<table> <thead> <tr> <th>HTTP Method</th> <th>Endpoint</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td>POST</td> <td>/users/</td> <td>Register a new user (requires profile image)</td> </tr> <tr> <td>POST</td> <td>/users/verify-otp</td> <td>Verify user email using OTP</td> </tr> <tr> <td>POST</td> <td>/users/login</td> <td>Log in a user</td> </tr> <tr> <td>GET</td> <td>/users/</td> <td>Get details of a user (requires auth and user_id)</td> </tr> <tr> <td>GET</td> <td>/users</td> <td>Get all users (requires auth)</td> </tr> <tr> <td>PUT</td> <td>/users/</td> <td>Update a user (requires auth and user_id)</td> </tr> <tr> <td>DELETE</td> <td>/users/</td> <td>Delete a user (requires auth and user_id; admin-only for others)</td> </tr> <tr> <td>POST</td> <td>/users/forgot-password</td> <td>Reset the password of a user</td> </tr> </tbody> </table>
+
+
+
+#### Account Routes ###### All routes in this module require authentication
+
+<table> <thead> <tr> <th>HTTP Method</th> <th>Endpoint</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td>POST</td> <td>/accounts</td> <td>Create a new account</td> </tr> <tr> <td>GET</td> <td>/accounts</td> <td>Get all accounts (admin-only)</td> </tr> <tr> <td>GET</td> <td>/accounts/</td> <td>Get one account</td> </tr> <tr> <td>GET</td> <td>/accounts/user/</td> <td>Get an account by user_id</td> </tr> <tr> <td>PUT</td> <td>/accounts/</td> <td>Update account</td> </tr> <tr> <td>DELETE</td> <td>/accounts/</td> <td>Delete an account</td> </tr> </tbody> </table>
+
+
+#### Transaction Routes ###### All routes in this module require authentication
+
+<table> <thead> <tr> <th>HTTP Method</th> <th>Endpoint</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td>POST</td> <td>/transactions</td> <td>Create a new transaction</td> </tr> <tr> <td>GET</td> <td>/transactions</td> <td>Get all transactions (admin-only)</td> </tr> <tr> <td>GET</td> <td>/transactions/</td> <td>Get one transaction</td> </tr> <tr> <td>GET</td> <td>/transactions/account/</td> <td>Get transactions by account_id</td> </tr> <tr> <td>PUT</td> <td>/transactions/</td> <td>Update transaction</td> </tr> <tr> <td>PUT</td> <td>/transactions/status/update</td> <td>Update transaction status</td> </tr> <tr> <td>DELETE</td> <td>/transactions/</td> <td>Delete a transaction</td> </tr> </tbody> </table>
+
+
+#### Location Counter Routes ###### Only admins can access these routes, and all require authentication
+
+
+<table> <thead> <tr> <th>HTTP Method</th> <th>Endpoint</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td>POST</td> <td>/location-counter</td> <td>Create a location counter</td> </tr> <tr> <td>GET</td> <td>/location-counter</td> <td>Get all location counters</td> </tr> <tr> <td>GET</td> <td>/location-counter/</td> <td>Get one location counter</td> </tr> <tr> <td>PUT</td> <td>/location-counter/</td> <td>Update a location counter</td> </tr> <tr> <td>DELETE</td> <td>/location-counter/</td> <td>Delete a location counter</td> </tr> </tbody> </table>
+
+
+
+## Technologies Used
+
+<ul>
+<li>
 Node.js
+</li>
+<li>
 NestJS
+</li>
+<li>
 TypeScript
+</li>
+<li>
 Knex.js (for MySQL)
+</li>
+<li>
 Objection.js (for ORM)
+</li>
+<li>
 Cloudinary (for image uploads)
+</li>
+<li>
 Multer (for file uploads)
-JWT (for authentication)
+</li>
+<li>
+JWT (for user authentication)
+</li>
+<li>
 Bcrypt (for password hashing)
-Nodemailer (for email verification)
+</li>
+<li>
+Nodemailer (for sending verification emails)
+</li>
+<li>
 Paystack (for payment processing)
+</li>
+<li>
 Jest (for unit testing)
+</li>
+<li>
 Swagger (for API documentation and testing)
+</li>
+<li>
 Otp-generator (for OTP generation)
+</li>
+<li>
 Moment (for date and time formatting)
+</li>
+<li>
 Class-validator & Class-transformer (for input validation)
+</li>
+</ul>
