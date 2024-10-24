@@ -12,6 +12,8 @@ Demo Credit is a RESTful API built using **Node.js**, **NestJS**, **Knex.js**, a
 - **Location Counter**: Create, read, update, delete, and generate demo credit IDs.
 - **Profile Management**: View and update user profiles.
 
+![demo-credit-ERD](https://github.com/user-attachments/assets/75e60781-4e9b-43ed-82d2-aea21a52acec)
+
 ## Table of Contents
 Installation<br />
 Environment Variables<br />
