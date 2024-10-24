@@ -131,27 +131,27 @@ APP_BASE_URL = YOUR APP_BASE_URL
 ## API Routes
 #### User Routes
 
-<table> <thead> <tr> <th>HTTP Method</th> <th>Endpoint</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td>POST</td> <td>/users/</td> <td>Register a new user (requires profile image)</td> </tr> <tr> <td>POST</td> <td>/users/verify-otp</td> <td>Verify user email using OTP</td> </tr> <tr> <td>POST</td> <td>/users/login</td> <td>Log in a user</td> </tr> <tr> <td>GET</td> <td>/users/</td> <td>Get details of a user (requires auth and user_id)</td> </tr> <tr> <td>GET</td> <td>/users</td> <td>Get all users (requires auth)</td> </tr> <tr> <td>PUT</td> <td>/users/</td> <td>Update a user (requires auth and user_id)</td> </tr> <tr> <td>DELETE</td> <td>/users/</td> <td>Delete a user (requires auth and user_id; admin-only for others)</td> </tr> <tr> <td>POST</td> <td>/users/forgot-password</td> <td>Reset the password of a user</td> </tr> </tbody> </table>
+<table> <thead> <tr> <th>HTTP Method</th> <th>Endpoint</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td>POST</td> <td>/users</td> <td>Register a new user (requires profile image)</td> </tr> <tr> <td>POST</td> <td>/users/verify-otp</td> <td>Verify user email using OTP</td> </tr> <tr> <td>POST</td> <td>/users/login</td> <td>Log in a user</td> </tr> <tr> <td>GET</td> <td>/users/:id</td> <td>Get details of a user (requires auth and user_id)</td> </tr> <tr> <td>GET</td> <td>/users</td> <td>Get all users (requires auth)</td> </tr> <tr> <td>PUT</td> <td>/users/:id</td> <td>Update a user (requires auth and user_id)</td> </tr> <tr> <td>DELETE</td> <td>/users/:id</td> <td>Delete a user (requires auth and user_id; admin-only for others)</td> </tr> <tr> <td>POST</td> <td>/users/forgot-password</td> <td>Reset the password of a user</td> </tr> </tbody> </table>
 
 
 
 #### Account Routes
 All routes in this module require authentication
 
-<table> <thead> <tr> <th>HTTP Method</th> <th>Endpoint</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td>POST</td> <td>/accounts</td> <td>Create a new account</td> </tr> <tr> <td>GET</td> <td>/accounts</td> <td>Get all accounts (admin-only)</td> </tr> <tr> <td>GET</td> <td>/accounts/</td> <td>Get one account</td> </tr> <tr> <td>GET</td> <td>/accounts/user/</td> <td>Get an account by user_id</td> </tr> <tr> <td>PUT</td> <td>/accounts/</td> <td>Update account</td> </tr> <tr> <td>DELETE</td> <td>/accounts/</td> <td>Delete an account</td> </tr> </tbody> </table>
+<table> <thead> <tr> <th>HTTP Method</th> <th>Endpoint</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td>POST</td> <td>/accounts</td> <td>Create a new account</td> </tr> <tr> <td>GET</td> <td>/accounts</td> <td>Get all accounts (admin-only)</td> </tr> <tr> <td>GET</td> <td>/accounts/:id</td> <td>Get one account</td> </tr> <tr> <td>GET</td> <td>/accounts/user/::userId</td> <td>Get an account by user_id</td> </tr> <tr> <td>PUT</td> <td>/accounts/:id</td> <td>Update account</td> </tr> <tr> <td>DELETE</td> <td>/accounts/:id</td> <td>Delete an account</td> </tr> </tbody> </table>
 
 
 #### Transaction Routes
 All routes in this module require authentication
 
-<table> <thead> <tr> <th>HTTP Method</th> <th>Endpoint</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td>POST</td> <td>/transactions</td> <td>Create a new transaction</td> </tr> <tr> <td>GET</td> <td>/transactions</td> <td>Get all transactions (admin-only)</td> </tr> <tr> <td>GET</td> <td>/transactions/</td> <td>Get one transaction</td> </tr> <tr> <td>GET</td> <td>/transactions/account/</td> <td>Get transactions by account_id</td> </tr> <tr> <td>PUT</td> <td>/transactions/</td> <td>Update transaction</td> </tr> <tr> <td>PUT</td> <td>/transactions/status/update</td> <td>Update transaction status</td> </tr> <tr> <td>DELETE</td> <td>/transactions/</td> <td>Delete a transaction</td> </tr> </tbody> </table>
+<table> <thead> <tr> <th>HTTP Method</th> <th>Endpoint</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td>POST</td> <td>/transactions</td> <td>Create a new transaction</td> </tr> <tr> <td>GET</td> <td>/transactions</td> <td>Get all transactions (admin-only)</td> </tr> <tr> <td>GET</td> <td>/transactions/:id</td> <td>Get one transaction</td> </tr> <tr> <td>GET</td> <td>/transactions/account/:accountId</td> <td>Get transactions by account_id</td> </tr> <tr> <td>PUT</td> <td>/transactions/:id</td> <td>Update transaction</td> </tr> <tr> <td>PUT</td> <td>/transactions/status/update</td> <td>Update transaction status</td> </tr> <tr> <td>DELETE</td> <td>/transactions/:id</td> <td>Delete a transaction</td> </tr> </tbody> </table>
 
 
 #### Location Counter Routes
 Only admins can access these routes, and all require authentication
 
 
-<table> <thead> <tr> <th>HTTP Method</th> <th>Endpoint</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td>POST</td> <td>/location-counter</td> <td>Create a location counter</td> </tr> <tr> <td>GET</td> <td>/location-counter</td> <td>Get all location counters</td> </tr> <tr> <td>GET</td> <td>/location-counter/</td> <td>Get one location counter</td> </tr> <tr> <td>PUT</td> <td>/location-counter/</td> <td>Update a location counter</td> </tr> <tr> <td>DELETE</td> <td>/location-counter/</td> <td>Delete a location counter</td> </tr> </tbody> </table>
+<table> <thead> <tr> <th>HTTP Method</th> <th>Endpoint</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td>POST</td> <td>/location-counter</td> <td>Create a location counter</td> </tr> <tr> <td>GET</td> <td>/location-counter</td> <td>Get all location counters</td> </tr> <tr> <td>GET</td> <td>/location-counter/:id</td> <td>Get one location counter</td> </tr> <tr> <td>PUT</td> <td>/location-counter/:id</td> <td>Update a location counter</td> </tr> <tr> <td>DELETE</td> <td>/location-counter/:id</td> <td>Delete a location counter</td> </tr> </tbody> </table>
 
 
 #### Payment Routes
