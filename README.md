@@ -138,7 +138,7 @@ APP_BASE_URL = YOUR APP_BASE_URL
 #### Account Routes
 All routes in this module require authentication
 
-<table> <thead> <tr> <th>HTTP Method</th> <th>Endpoint</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td>POST</td> <td>/accounts</td> <td>Create a new account</td> </tr> <tr> <td>GET</td> <td>/accounts</td> <td>Get all accounts (admin-only)</td> </tr> <tr> <td>GET</td> <td>/accounts/:id</td> <td>Get one account</td> </tr> <tr> <td>GET</td> <td>/accounts/user/::userId</td> <td>Get an account by user_id</td> </tr> <tr> <td>PUT</td> <td>/accounts/:id</td> <td>Update account</td> </tr> <tr> <td>DELETE</td> <td>/accounts/:id</td> <td>Delete an account</td> </tr> </tbody> </table>
+<table> <thead> <tr> <th>HTTP Method</th> <th>Endpoint</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td>POST</td> <td>/accounts</td> <td>Create a new account</td> </tr> <tr> <td>GET</td> <td>/accounts</td> <td>Get all accounts (admin-only)</td> </tr> <tr> <td>GET</td> <td>/accounts/:id</td> <td>Get one account</td> </tr> <tr> <td>GET</td> <td>/accounts/user/:userId</td> <td>Get an account by user_id</td> </tr> <tr> <td>PUT</td> <td>/accounts/:id</td> <td>Update account</td> </tr> <tr> <td>DELETE</td> <td>/accounts/:id</td> <td>Delete an account</td> </tr> </tbody> </table>
 
 
 #### Transaction Routes
