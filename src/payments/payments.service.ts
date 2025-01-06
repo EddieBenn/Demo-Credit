@@ -17,6 +17,7 @@ import { Account } from '../accounts/entities/account.entity';
 @Injectable()
 export class PaymentsService {
   private readonly secretKey: string;
+  private readonly baseURL: string;
 
   constructor(
     @Inject('Transaction')
@@ -30,6 +31,7 @@ export class PaymentsService {
     private readonly transactionsService: TransactionsService,
   ) {
     this.secretKey = this.configService.get<string>('PAYSTACK_SECRET_KEY');
+    this.baseURL = this.configService.get<string>('PAYSTACK_BASE_URL');
   }
 
   async initializeTransactionPaystack(email: string, amount: number) {
@@ -47,7 +49,7 @@ export class PaymentsService {
 
     try {
       const response = await axios.post(
-        'https://api.paystack.co/transaction/initialize',
+        `${this.baseURL}/transaction/initialize`,
         data,
         { headers },
       );
@@ -83,7 +85,7 @@ export class PaymentsService {
 
     try {
       const response = await axios.get(
-        `https://api.paystack.co/transaction/verify/${reference}`,
+        `${this.baseURL}/transaction/verify/${reference}`,
         { headers },
       );
 
@@ -202,7 +204,7 @@ export class PaymentsService {
 
     try {
       const response = await axios.post(
-        'https://api.paystack.co/transferrecipient',
+        `${this.baseURL}/transferrecipient`,
         data,
         { headers },
       );
@@ -234,11 +236,9 @@ export class PaymentsService {
     };
 
     try {
-      const response = await axios.post(
-        'https://api.paystack.co/transfer',
-        data,
-        { headers },
-      );
+      const response = await axios.post(`${this.baseURL}/transfer`, data, {
+        headers,
+      });
       const user = await this.userModel.query().findOne({ email });
       const account = await this.accountModel
         .query()
@@ -275,7 +275,7 @@ export class PaymentsService {
 
     try {
       const response = await axios.post(
-        'https://api.paystack.co/transfer/finalize_transfer',
+        `${this.baseURL}/transfer/finalize_transfer`,
         data,
         { headers },
       );
@@ -295,7 +295,7 @@ export class PaymentsService {
 
     try {
       const response = await axios.get(
-        `https://api.paystack.co/transfer/verify/${reference}`,
+        `${this.baseURL}/transfer/verify/${reference}`,
         { headers },
       );
 
@@ -429,7 +429,7 @@ export class PaymentsService {
     };
 
     try {
-      const response = await axios.get('https://api.paystack.co/customer', {
+      const response = await axios.get(`${this.baseURL}/customer`, {
         headers,
       });
       return response.data;
@@ -448,10 +448,9 @@ export class PaymentsService {
     };
 
     try {
-      const response = await axios.get(
-        `https://api.paystack.co/customer/${email}`,
-        { headers },
-      );
+      const response = await axios.get(`${this.baseURL}/customer/${email}`, {
+        headers,
+      });
 
       return response.data;
     } catch (error) {
@@ -481,11 +480,9 @@ export class PaymentsService {
     };
 
     try {
-      const response = await axios.post(
-        'https://api.paystack.co/customer',
-        data,
-        { headers },
-      );
+      const response = await axios.post(`${this.baseURL}/customer`, data, {
+        headers,
+      });
       return response.data;
     } catch (error) {
       throw new HttpException(
@@ -507,7 +504,7 @@ export class PaymentsService {
 
     try {
       const response = await axios.post(
-        'https://api.paystack.co/dedicated_account',
+        `${this.baseURL}/dedicated_account`,
         data,
         { headers },
       );
